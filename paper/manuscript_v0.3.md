@@ -4,7 +4,7 @@
 
 ¹ Universidad Bernardo O'Higgins (UBO), Santiago, Chile. ² Universidad Bolivariana del Ecuador (UBE), Guayaquil, Ecuador. ³ Universidad de Guayaquil, Guayaquil, Ecuador.
 
-*Borrador v0.3 — destino: NCML. Nota de campo, no línea Q1 propia. Revisión aplicada tras ronda adversarial de 5 modelos y dos experimentos de seguimiento (Choice enriquecido, Choice binario).*
+*Borrador v0.3 — destino: NCML. Nota de campo, no línea Q1 propia. Revisión aplicada tras ronda adversarial de 5 modelos y dos experimentos de seguimiento (Choice enriquecido, Choice binario). Actualización 19-sep-2026: caso AGREE-REFUTE completado en los tres experimentos tras resolver el límite de tasa (§8).*
 
 ---
 
@@ -83,9 +83,9 @@ Ninguno de los tres experimentos promedia repeticiones (una sola llamada por cas
 | SILENT-1 | ignorancia genuina (sin testigos ni cámaras) | 0,46 |
 | SILENT-2 | ignorancia genuina (registro perdido) | 0,48 |
 | AGREE-SUPPORT | control: fuentes de acuerdo (apoyo) | 0,83 |
-| AGREE-REFUTE | control: fuentes de acuerdo (refutación) | sin datos (rate-limit, §8) |
+| AGREE-REFUTE | control: fuentes de acuerdo (refutación) | 0,08 |
 
-Los dos casos TORN (0,50–0,57) y los dos SILENT (0,46–0,48) caen en una banda común y estrecha. El único control completado con evidencia inequívoca (AGREE-SUPPORT) produce 0,83, alejado de 0,5.
+Los dos casos TORN (0,50–0,57) y los dos SILENT (0,46–0,48) caen en una banda común y estrecha. Los dos controles, con evidencia inequívoca, producen valores alejados de 0,5 en la dirección correcta: 0,83 para el apoyo (evidencia de "red") y 0,08 para la refutación (evidencia de "green", es decir P(rojo) bajo con alta confianza).
 
 **Experimento 2 — tipo `Choice` con esquema enriquecido:**
 
@@ -96,9 +96,9 @@ Los dos casos TORN (0,50–0,57) y los dos SILENT (0,46–0,48) caen en una band
 | SILENT-1 | ignorancia genuina | *insufficient_evidence* | 1,00 |
 | SILENT-2 | ignorancia genuina | *insufficient_evidence* | 1,00 |
 | AGREE-SUPPORT | control: fuentes de acuerdo | *red* | 1,00 |
-| AGREE-REFUTE | control: fuentes de acuerdo | sin datos (rate-limit, §8) | — |
+| AGREE-REFUTE | control: fuentes de acuerdo | *green* | 1,00 |
 
-Con el tipo `Choice` y un esquema que nombra explícitamente "evidencia en conflicto" y "evidencia insuficiente" como opciones de primera clase, Jev separa los cuatro casos experimentales (TORN vs. SILENT) con probabilidad máxima y sin ambigüedad, y clasifica correctamente el control de apoyo. La misma evidencia textual que colapsó a una banda de 0,46–0,57 bajo el tipo `boolean` produce una distinción perfecta bajo el tipo `Choice`.
+Con el tipo `Choice` y un esquema que nombra explícitamente "evidencia en conflicto" y "evidencia insuficiente" como opciones de primera clase, Jev separa los cuatro casos experimentales (TORN vs. SILENT) con probabilidad máxima y sin ambigüedad, y clasifica correctamente los dos controles (apoyo → `red`, refutación → `green`), ambos con probabilidad máxima. La misma evidencia textual que colapsó a una banda de 0,46–0,57 bajo el tipo `boolean` produce una distinción perfecta bajo el tipo `Choice`.
 
 **Experimento 3 — tipo `Choice` binario (`red`/`green`, sin categorías de escape):**
 
@@ -109,9 +109,9 @@ Con el tipo `Choice` y un esquema que nombra explícitamente "evidencia en confl
 | SILENT-1 | ignorancia genuina | 0,67 | 0,33 |
 | SILENT-2 | ignorancia genuina | 0,77 | 0,23 |
 | AGREE-SUPPORT | control: fuentes de acuerdo | 1,00 | 0,00 |
-| AGREE-REFUTE | control: fuentes de acuerdo | sin datos (rate-limit, §8) | — |
+| AGREE-REFUTE | control: fuentes de acuerdo | 0,00 | 1,00 |
 
-Sin categorías de escape, Jev **no** reproduce el colapso a ~0,5 del Experimento 1 ni la separación perfecta del Experimento 2. Aparece, en cambio, un sesgo direccional hacia `red` en los seis casos, más marcado en TORN (0,84–0,85) que en SILENT (0,67–0,77) — una tendencia ordinal débil (n=2 por categoría) que no permite una conclusión firme. Es un tercer patrón, no anticipado por ninguna de las dos hipótesis simples (colapso simétrico o separación limpia).
+Sin categorías de escape, Jev **no** reproduce el colapso a ~0,5 del Experimento 1 ni la separación perfecta del Experimento 2. Aparece, en cambio, un sesgo direccional hacia `red` en TORN y SILENT (0,67–0,85), más marcado en TORN (0,84–0,85) que en SILENT (0,67–0,77) — una tendencia ordinal débil (n=2 por categoría) que no permite una conclusión firme. El control de refutación (AGREE-REFUTE), con evidencia inequívoca de `green`, **no** sigue ese sesgo: se clasifica de forma limpia y correcta (P(red)=0,00), igual de nítido que el control de apoyo en la dirección opuesta. El sesgo hacia `red`, por tanto, no es un artefacto indiscriminado del modelo — aparece únicamente en los casos con evidencia ambigua (TORN) o ausente (SILENT), no en los casos con evidencia clara en cualquier dirección. Es un tercer patrón, no anticipado por ninguna de las dos hipótesis simples (colapso simétrico o separación limpia).
 
 ## 7. Discusión
 
@@ -123,11 +123,13 @@ El Experimento 3 responde la pregunta abierta de la v0.2 solo parcialmente, y de
 
 La explicación más honesta disponible con estos datos, sin sobreinterpretar un n=2 por celda, es un posible **confusor léxico en el diseño del propio estímulo**: los estados TORN y AGREE-SUPPORT contienen literalmente la palabra "red" en el texto (alguien la afirma, aunque sea contestada), mientras que los estados SILENT no mencionan ni "red" ni "green" en absoluto. Si el modelo pondera en parte la presencia superficial de la palabra que nombra una opción —y no solo si esa afirmación es creíble o está en disputa—, eso produciría exactamente el patrón observado: sesgo hacia `red` en todos los casos donde la palabra aparece (TORN, AGREE-SUPPORT), atenuado pero no eliminado cuando no aparece en absoluto (SILENT). Esta explicación es plausible y verificable, pero este trabajo no la probó de forma controlada (exigiría, por ejemplo, invertir qué opción se nombra primero en el texto de los estados, o construir estados SILENT que sí mencionen ambas palabras sin evidencia real) — queda como pregunta abierta genuina, no como hallazgo cerrado.
 
+El caso AGREE-REFUTE, completado en una llamada de seguimiento tras resolver el límite de tasa (§8), ofrece una prueba adicional —no controlada, pero informativa— sobre esa hipótesis léxica. Su texto también contiene literalmente la palabra "red" ("the traffic light was green, not red"), en una cláusula de negación explícita. Si el sesgo fuera una simple cuenta de superficie de apariciones de esa palabra, cabría esperar cierta atracción hacia `red` también aquí. En cambio, Jev clasifica este caso con probabilidad 1,00 hacia `green` (P(red)=0,00) — tan nítido como el control de apoyo hacia `red`. Esto no descarta el confusor léxico de plano (en AGREE-REFUTE la palabra aparece negada, mientras que en TORN aparece afirmada sin matiz por al menos un testigo o sensor), pero sí acota su alcance: el sesgo hacia `red` del Experimento 3 no es una cuenta ciega de apariciones léxicas, y se concentra específicamente en los casos con evidencia ambigua (TORN) o ausente (SILENT), no en los casos con evidencia clara en cualquier dirección.
+
 Lo que sí se sostiene con los tres experimentos juntos: el argumento deductivo de la §4 (ningún escalar único puede ser inyectivo sobre un espacio de evidencia de mayor dimensión) explica el colapso del tipo Noul, pero **no predice ni explica** el patrón del Experimento 3 — un `Choice` con dos opciones no es un escalar único inyectivo de la misma manera, y aun así no logró la separación que su espacio representacional (dos grados de libertad, con probabilidades que suman 1) permitiría en principio. La causa ahí es más probablemente un artefacto del modelo o del diseño del estímulo que una limitación representacional necesaria. La recomendación práctica se mantiene, pero se vuelve más cautelosa: para preservar la distinción entre conflicto e ignorancia, no basta con evitar el tipo `boolean` — hace falta, además, que el esquema de `Choice` nombre esos estados explícitamente como opciones de primera clase, y conviene verificar empíricamente que el modelo no esté respondiendo a pistas léxicas superficiales del estado en vez de a la estructura real de la evidencia.
 
 ## 8. Limitaciones
 
-(a) n=5 casos completados de 6 en cada uno de los tres experimentos (el control AGREE-REFUTE falló por límite de tasa del nivel gratuito de Vercel AI Gateway **en los tres**, incluso con un método de pago ya registrado — el proveedor exige créditos de pago cargados, no solo una tarjeta en archivo, y ese paso no se completó; es el único caso que nunca se pudo observar, en ninguna condición, y su ausencia es más costosa en el Experimento 3, donde habría sido la prueba más directa de si el sesgo hacia `red` tiene un techo); (b) una sola llamada por caso en cada experimento, sin repetición para estimar varianza — crítico para el Experimento 3, cuyo patrón (n=2 por categoría) no permite distinguir tendencia real de ruido de muestra; (c) los Experimentos 2 y 3 fueron motivados por resultados previos y no estaban preregistrados — se declara así explícitamente; (d) la explicación del sesgo léxico en el Experimento 3 (§7) es plausible pero no se probó de forma controlada (requeriría invertir el orden de mención de las opciones en el texto, o estados SILENT que mencionen ambas palabras); (e) es un producto de cuatro días de antigüedad al momento de escribir esto — su comportamiento y límites pueden cambiar sin aviso, y estos resultados son una fotografía del 19-sep-2026; (f) las cifras de velocidad, costo y método de entrenamiento (RLCD) son afirmaciones del fabricante, no auditadas de forma independiente en este trabajo; (g) la taxonomía de cinco categorías de la §2 es síntesis propia, no revisión sistemática.
+(a) [RESUELTO 19-sep-2026] El control AGREE-REFUTE falló inicialmente por límite de tasa del nivel gratuito de Vercel AI Gateway **en los tres experimentos**, incluso con un método de pago ya registrado — el proveedor exige créditos de pago cargados, no solo una tarjeta en archivo. Ese paso se completó el mismo día (compra de $20 de crédito), y el caso se corrió en una llamada de seguimiento independiente (mismo estado, mismos tres esquemas de pregunta); los tres experimentos tienen ahora **n=6/6 casos completos**. Los valores resultantes (§6-§7) son consistentes con el patrón de cada experimento; (b) una sola llamada por caso en cada experimento, sin repetición para estimar varianza — crítico para el Experimento 3, cuyo patrón (n=2 por categoría en TORN/SILENT) no permite distinguir tendencia real de ruido de muestra; (c) los Experimentos 2 y 3 fueron motivados por resultados previos y no estaban preregistrados — se declara así explícitamente; (d) la explicación del sesgo léxico en el Experimento 3 (§7) es plausible y recibió apoyo adicional del caso AGREE-REFUTE, pero no se probó de forma controlada (requeriría invertir el orden de mención de las opciones en el texto, o estados SILENT que mencionen ambas palabras); (e) es un producto de cuatro días de antigüedad al momento de escribir esto — su comportamiento y límites pueden cambiar sin aviso, y estos resultados son una fotografía del 19-sep-2026; (f) las cifras de velocidad, costo y método de entrenamiento (RLCD) son afirmaciones del fabricante, no auditadas de forma independiente en este trabajo; (g) la taxonomía de cinco categorías de la §2 es síntesis propia, no revisión sistemática.
 
 ## 9. Conclusión
 
@@ -169,7 +171,7 @@ La lección que sobrevive a los tres experimentos no es sobre un límite fijo de
 
 [14] Gu, J., Jiang, X., Shi, Z., Tian, H., Zhai, X., Xu, C., et al. (2026). *A survey on LLM-as-a-judge*. **The Innovation**, 7(6), 101253. https://www.sciencedirect.com/science/article/pii/S2666675825004564
 
-**Datos y código:** repositorio público — https://github.com/mleyvaz/jev-typed-evaluation-collapse — con `run_experiment.mjs` + `results.json` (Experimento 1), `run_experiment_choice.mjs` + `results_choice.json` (Experimento 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experimento 3), y `make_fig1_taxonomy.py` (Figura 1). Reproducible con una llave propia de AI Gateway.
+**Datos y código:** repositorio público — https://github.com/mleyvaz/jev-typed-evaluation-collapse — con `run_experiment.mjs` + `results.json` (Experimento 1), `run_experiment_choice.mjs` + `results_choice.json` (Experimento 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experimento 3), `run_missing_refute.mjs` (llamada de seguimiento que completó el caso AGREE-REFUTE en los tres esquemas tras resolver el límite de tasa), y `make_fig1_taxonomy.py` (Figura 1). Reproducible con una llave propia de AI Gateway.
 
 ---
 
@@ -262,7 +264,7 @@ TORN-2:         {"wasRed":{"type":"boolean","probability":0.50}}
 SILENT-1:       {"wasRed":{"type":"boolean","probability":0.46}}
 SILENT-2:       {"wasRed":{"type":"boolean","probability":0.48}}
 AGREE-SUPPORT:  {"wasRed":{"type":"boolean","probability":0.83}}
-AGREE-REFUTE:   ERROR — GatewayRateLimitError (rate-limit del nivel gratuito, §8)
+AGREE-REFUTE:   {"wasRed":{"type":"boolean","probability":0.08}}
 ```
 
 **Experimento 2 — `Choice` enriquecido:**
@@ -277,7 +279,8 @@ SILENT-2:       {"lightState":{"type":"choice","choice":"insufficient_evidence",
                   "probabilities":{"red":0,"green":0,"conflicting_evidence":0,"insufficient_evidence":1}}}
 AGREE-SUPPORT:  {"lightState":{"type":"choice","choice":"red",
                   "probabilities":{"red":1,"green":0,"conflicting_evidence":0,"insufficient_evidence":0}}}
-AGREE-REFUTE:   ERROR — GatewayRateLimitError (rate-limit del nivel gratuito, §8)
+AGREE-REFUTE:   {"lightState":{"type":"choice","choice":"green",
+                  "probabilities":{"red":0,"green":1,"conflicting_evidence":0,"insufficient_evidence":0}}}
 ```
 
 **Experimento 3 — `Choice` binario:**
@@ -287,5 +290,5 @@ TORN-2:         {"lightState":{"type":"choice","choice":"red","probabilities":{"
 SILENT-1:       {"lightState":{"type":"choice","choice":"red","probabilities":{"red":0.67,"green":0.33}}}
 SILENT-2:       {"lightState":{"type":"choice","choice":"red","probabilities":{"red":0.77,"green":0.23}}}
 AGREE-SUPPORT:  {"lightState":{"type":"choice","choice":"red","probabilities":{"red":1,"green":0}}}
-AGREE-REFUTE:   ERROR — GatewayRateLimitError (rate-limit del nivel gratuito, §8)
+AGREE-REFUTE:   {"lightState":{"type":"choice","choice":"green","probabilities":{"red":0,"green":1}}}
 ```

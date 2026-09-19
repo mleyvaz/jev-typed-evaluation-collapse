@@ -4,7 +4,7 @@
 
 ¹ Universidad Bernardo O'Higgins (UBO), Santiago, Chile. ² Universidad Bolivariana del Ecuador (UBE), Guayaquil, Ecuador. ³ Universidad de Guayaquil, Guayaquil, Ecuador.
 
-*Draft v0.3 (English) — target: NCML. Field note, not part of the author's own Q1 line. Revised after a 5-model adversarial review round and two follow-up experiments (enriched Choice, binary Choice).*
+*Draft v0.3 (English) — target: NCML. Field note, not part of the author's own Q1 line. Revised after a 5-model adversarial review round and two follow-up experiments (enriched Choice, binary Choice). Update 2026-09-19: the AGREE-REFUTE case was completed in all three experiments after resolving the rate limit (§8).*
 
 ---
 
@@ -83,9 +83,9 @@ None of the three experiments averages repetitions (a single call per case; limi
 | SILENT-1 | genuine ignorance (no witnesses or cameras) | 0.46 |
 | SILENT-2 | genuine ignorance (lost record) | 0.48 |
 | AGREE-SUPPORT | control: sources agree (support) | 0.83 |
-| AGREE-REFUTE | control: sources agree (refutation) | no data (rate-limit, §8) |
+| AGREE-REFUTE | control: sources agree (refutation) | 0.08 |
 
-The two TORN cases (0.50–0.57) and the two SILENT cases (0.46–0.48) fall within a common, narrow band. The only completed control with unambiguous evidence (AGREE-SUPPORT) yields 0.83, far from 0.5.
+The two TORN cases (0.50–0.57) and the two SILENT cases (0.46–0.48) fall within a common, narrow band. Both controls, with unambiguous evidence, yield values far from 0.5 in the correct direction: 0.83 for support ("red" evidence) and 0.08 for refutation ("green" evidence, i.e. low P(red) with high confidence).
 
 **Experiment 2 — `Choice` type with enriched schema:**
 
@@ -96,9 +96,9 @@ The two TORN cases (0.50–0.57) and the two SILENT cases (0.46–0.48) fall wit
 | SILENT-1 | genuine ignorance | *insufficient_evidence* | 1.00 |
 | SILENT-2 | genuine ignorance | *insufficient_evidence* | 1.00 |
 | AGREE-SUPPORT | control: sources agree | *red* | 1.00 |
-| AGREE-REFUTE | control: sources agree | no data (rate-limit, §8) | — |
+| AGREE-REFUTE | control: sources agree | *green* | 1.00 |
 
-With the `Choice` type and a schema that explicitly names "conflicting evidence" and "insufficient evidence" as first-class options, Jev separates the four experimental cases (TORN vs. SILENT) with maximum probability and no ambiguity, and correctly classifies the support control. The same textual evidence that collapsed to a 0.46–0.57 band under the `boolean` type produces a perfect distinction under the `Choice` type.
+With the `Choice` type and a schema that explicitly names "conflicting evidence" and "insufficient evidence" as first-class options, Jev separates the four experimental cases (TORN vs. SILENT) with maximum probability and no ambiguity, and correctly classifies both controls (support → `red`, refutation → `green`), both at maximum probability. The same textual evidence that collapsed to a 0.46–0.57 band under the `boolean` type produces a perfect distinction under the `Choice` type.
 
 **Experiment 3 — binary `Choice` type (`red`/`green`, no escape categories):**
 
@@ -109,9 +109,9 @@ With the `Choice` type and a schema that explicitly names "conflicting evidence"
 | SILENT-1 | genuine ignorance | 0.67 | 0.33 |
 | SILENT-2 | genuine ignorance | 0.77 | 0.23 |
 | AGREE-SUPPORT | control: sources agree | 1.00 | 0.00 |
-| AGREE-REFUTE | control: sources agree | no data (rate-limit, §8) | — |
+| AGREE-REFUTE | control: sources agree | 0.00 | 1.00 |
 
-Without escape categories, Jev **does not** reproduce the ~0.5 collapse of Experiment 1 nor the perfect separation of Experiment 2. Instead, a directional bias toward `red` appears across all six cases, more pronounced in TORN (0.84–0.85) than in SILENT (0.67–0.77) — a weak ordinal trend (n=2 per category) that does not allow a firm conclusion. It is a third pattern, unanticipated by either of the two simple hypotheses (symmetric collapse or clean separation).
+Without escape categories, Jev **does not** reproduce the ~0.5 collapse of Experiment 1 nor the perfect separation of Experiment 2. Instead, a directional bias toward `red` appears in TORN and SILENT (0.67–0.85), more pronounced in TORN (0.84–0.85) than in SILENT (0.67–0.77) — a weak ordinal trend (n=2 per category) that does not allow a firm conclusion. The refutation control (AGREE-REFUTE), with unambiguous `green` evidence, does **not** follow that bias: it is classified cleanly and correctly (P(red)=0.00), just as sharply as the support control in the opposite direction. The bias toward `red` is therefore not an indiscriminate model artifact — it appears only in cases with ambiguous (TORN) or absent (SILENT) evidence, not in cases with clear evidence in either direction. It is a third pattern, unanticipated by either of the two simple hypotheses (symmetric collapse or clean separation).
 
 ## 7. Discussion
 
@@ -123,11 +123,13 @@ Experiment 3 answers the open question from v0.2 only partially, and in a more u
 
 The most honest explanation available with this data, without over-interpreting an n=2 per cell, is a possible **lexical confound in the design of the stimulus itself**: the TORN and AGREE-SUPPORT states literally contain the word "red" in the text (someone asserts it, even if it is contested), while the SILENT states do not mention either "red" or "green" at all. If the model partly weighs the surface presence of the word naming an option — and not only whether that assertion is credible or disputed — that would produce exactly the observed pattern: bias toward `red` in every case where the word appears (TORN, AGREE-SUPPORT), attenuated but not eliminated when it does not appear at all (SILENT). This explanation is plausible and testable, but this work did not test it in a controlled way (it would require, for example, reversing which option is named first in the state text, or constructing SILENT states that do mention both words without real evidence) — it remains a genuine open question, not a closed finding.
 
+The AGREE-REFUTE case, completed in a follow-up call after resolving the rate limit (§8), offers an additional — uncontrolled, but informative — test of that lexical hypothesis. Its text also literally contains the word "red" ("the traffic light was green, not red"), in an explicit negation clause. If the bias were a simple surface count of that word's occurrences, some pull toward `red` would be expected here too. Instead, Jev classifies this case with probability 1.00 toward `green` (P(red)=0.00) — as clean as the support control's pull toward `red`. This does not rule out the lexical confound outright (in AGREE-REFUTE the word appears negated, whereas in TORN it is asserted without qualification by at least one witness or sensor), but it does narrow its scope: the `red` bias in Experiment 3 is not a blind count of lexical occurrences, and it concentrates specifically on cases with ambiguous (TORN) or absent (SILENT) evidence, not on cases with clear evidence in either direction.
+
 What does hold up across the three experiments together: the deductive argument in §4 (no single scalar can be injective over a higher-dimensional evidence space) explains the collapse of the Noul type, but **does not predict or explain** the pattern of Experiment 3 — a `Choice` with two options is not a single injective scalar in the same way, and yet it failed to achieve the separation that its representational space (two degrees of freedom, with probabilities summing to 1) would in principle allow. The cause there is more likely a model or stimulus-design artifact than a necessary representational limitation. The practical recommendation stands, but becomes more cautious: to preserve the distinction between conflict and ignorance, avoiding the `boolean` type is not enough — the `Choice` schema must also explicitly name those states as first-class options, and it is worth empirically verifying that the model is not responding to superficial lexical cues in the state rather than to the actual structure of the evidence.
 
 ## 8. Limitations
 
-(a) n=5 completed cases out of 6 in each of the three experiments (the AGREE-REFUTE control failed due to the Vercel AI Gateway free tier's rate limit **in all three**, even with a payment method already on file — the provider requires loaded paid credits, not just a card on file, and that step was not completed; it is the only case that could never be observed, under any condition, and its absence is costliest in Experiment 3, where it would have been the most direct test of whether the bias toward `red` has a ceiling); (b) a single call per case in each experiment, with no repetition to estimate variance — critical for Experiment 3, whose pattern (n=2 per category) does not allow distinguishing a real trend from sample noise; (c) Experiments 2 and 3 were motivated by prior results and were not preregistered — explicitly declared as such; (d) the lexical-bias explanation for Experiment 3 (§7) is plausible but was not tested in a controlled way (this would require reversing the order in which options are mentioned in the text, or SILENT states that mention both words); (e) this is a four-day-old product at the time of writing — its behavior, documentation, and rate limits may change without notice, and these results should be read as a snapshot of 2026-09-19, not a stable characterization; (f) the speed, cost, and training-method (RLCD) figures are vendor claims, not independently audited in this work; (g) the five-category taxonomy in §2 is the author's own synthesis, not a systematic review.
+(a) [RESOLVED 2026-09-19] The AGREE-REFUTE control initially failed due to the Vercel AI Gateway free tier's rate limit **in all three experiments**, even with a payment method already on file — the provider requires loaded paid credits, not just a card on file. That step was completed the same day (a $20 credit purchase), and the case was run in an independent follow-up call (same state, same three question schemas); all three experiments now have **n=6/6 complete cases**. The resulting values (§6–§7) are consistent with each experiment's pattern; (b) a single call per case in each experiment, with no repetition to estimate variance — critical for Experiment 3, whose pattern (n=2 per category in TORN/SILENT) does not allow distinguishing a real trend from sample noise; (c) Experiments 2 and 3 were motivated by prior results and were not preregistered — explicitly declared as such; (d) the lexical-bias explanation for Experiment 3 (§7) is plausible and received additional support from the AGREE-REFUTE case, but was not tested in a controlled way (this would require reversing the order in which options are mentioned in the text, or SILENT states that mention both words); (e) this is a four-day-old product at the time of writing — its behavior, documentation, and rate limits may change without notice, and these results should be read as a snapshot of 2026-09-19, not a stable characterization; (f) the speed, cost, and training-method (RLCD) figures are vendor claims, not independently audited in this work; (g) the five-category taxonomy in §2 is the author's own synthesis, not a systematic review.
 
 ## 9. Conclusion
 
@@ -169,7 +171,7 @@ The lesson that survives all three experiments is not about a fixed limit of Jev
 
 [14] Gu, J., Jiang, X., Shi, Z., Tian, H., Zhai, X., Xu, C., et al. (2026). *A survey on LLM-as-a-judge*. **The Innovation**, 7(6), 101253. https://www.sciencedirect.com/science/article/pii/S2666675825004564
 
-**Data and code:** public repository — https://github.com/mleyvaz/jev-typed-evaluation-collapse — with `run_experiment.mjs` + `results.json` (Experiment 1), `run_experiment_choice.mjs` + `results_choice.json` (Experiment 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experiment 3), and `make_fig1_taxonomy.py` (Figure 1). Reproducible with the reader's own AI Gateway key.
+**Data and code:** public repository — https://github.com/mleyvaz/jev-typed-evaluation-collapse — with `run_experiment.mjs` + `results.json` (Experiment 1), `run_experiment_choice.mjs` + `results_choice.json` (Experiment 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experiment 3), `run_missing_refute.mjs` (follow-up call that completed the AGREE-REFUTE case across all three schemas after resolving the rate limit), and `make_fig1_taxonomy.py` (Figure 1). Reproducible with the reader's own AI Gateway key.
 
 ---
 
@@ -262,7 +264,7 @@ TORN-2:         {"wasRed":{"type":"boolean","probability":0.50}}
 SILENT-1:       {"wasRed":{"type":"boolean","probability":0.46}}
 SILENT-2:       {"wasRed":{"type":"boolean","probability":0.48}}
 AGREE-SUPPORT:  {"wasRed":{"type":"boolean","probability":0.83}}
-AGREE-REFUTE:   ERROR — GatewayRateLimitError (free-tier rate limit, §8)
+AGREE-REFUTE:   {"wasRed":{"type":"boolean","probability":0.08}}
 ```
 
 **Experiment 2 — enriched `Choice`:**
@@ -277,7 +279,8 @@ SILENT-2:       {"lightState":{"type":"choice","choice":"insufficient_evidence",
                   "probabilities":{"red":0,"green":0,"conflicting_evidence":0,"insufficient_evidence":1}}}
 AGREE-SUPPORT:  {"lightState":{"type":"choice","choice":"red",
                   "probabilities":{"red":1,"green":0,"conflicting_evidence":0,"insufficient_evidence":0}}}
-AGREE-REFUTE:   ERROR — GatewayRateLimitError (free-tier rate limit, §8)
+AGREE-REFUTE:   {"lightState":{"type":"choice","choice":"green",
+                  "probabilities":{"red":0,"green":1,"conflicting_evidence":0,"insufficient_evidence":0}}}
 ```
 
 **Experiment 3 — binary `Choice`:**
@@ -287,5 +290,5 @@ TORN-2:         {"lightState":{"type":"choice","choice":"red","probabilities":{"
 SILENT-1:       {"lightState":{"type":"choice","choice":"red","probabilities":{"red":0.67,"green":0.33}}}
 SILENT-2:       {"lightState":{"type":"choice","choice":"red","probabilities":{"red":0.77,"green":0.23}}}
 AGREE-SUPPORT:  {"lightState":{"type":"choice","choice":"red","probabilities":{"red":1,"green":0}}}
-AGREE-REFUTE:   ERROR — GatewayRateLimitError (free-tier rate limit, §8)
+AGREE-REFUTE:   {"lightState":{"type":"choice","choice":"green","probabilities":{"red":0,"green":1}}}
 ```

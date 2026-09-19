@@ -324,38 +324,44 @@ table(["Caso", "Categoría", "P(rojo)"],
        ["SILENT-1", "ignorancia genuina (sin testigos ni cámaras)", "0,46"],
        ["SILENT-2", "ignorancia genuina (registro perdido)", "0,48"],
        ["AGREE-SUPPORT", "control: fuentes de acuerdo (apoyo)", "0,83"],
-       ["AGREE-REFUTE", "control: fuentes de acuerdo (refutación)", "sin datos (rate-limit, §8)"]],
+       ["AGREE-REFUTE", "control: fuentes de acuerdo (refutación)", "0,08"]],
       "Tabla 2: Experimento 1 (tipo boolean/Noul) — probabilidad de \"rojo\".")
 P("Los dos casos TORN (0,50–0,57) y los dos SILENT (0,46–0,48) caen en una banda común y "
-  "estrecha. El único control completado con evidencia inequívoca (AGREE-SUPPORT) produce "
-  "0,83, alejado de 0,5.")
+  "estrecha. Los dos controles, con evidencia inequívoca, producen valores alejados de 0,5 en "
+  "la dirección correcta: 0,83 para el apoyo (evidencia de \"red\") y 0,08 para la refutación "
+  "(evidencia de \"green\").")
 table(["Caso", "Categoría", "Elección de Jev", "P(elección)"],
       [["TORN-1", "conflicto genuino", "conflicting_evidence", "1,00"],
        ["TORN-2", "conflicto genuino", "conflicting_evidence", "1,00"],
        ["SILENT-1", "ignorancia genuina", "insufficient_evidence", "1,00"],
        ["SILENT-2", "ignorancia genuina", "insufficient_evidence", "1,00"],
        ["AGREE-SUPPORT", "control: fuentes de acuerdo", "red", "1,00"],
-       ["AGREE-REFUTE", "control: fuentes de acuerdo", "sin datos (rate-limit, §8)", "—"]],
+       ["AGREE-REFUTE", "control: fuentes de acuerdo", "green", "1,00"]],
       "Tabla 3: Experimento 2 (tipo Choice, esquema enriquecido) — elección y probabilidad.")
 P("Con el tipo Choice y un esquema que nombra explícitamente \"evidencia en conflicto\" y "
   "\"evidencia insuficiente\" como opciones de primera clase, Jev separa los cuatro casos "
   "experimentales (TORN vs. SILENT) con probabilidad máxima y sin ambigüedad, y clasifica "
-  "correctamente el control de apoyo. La misma evidencia textual que colapsó a una banda de "
-  "0,46–0,57 bajo el tipo boolean produce una distinción perfecta bajo el tipo Choice.")
+  "correctamente los dos controles (apoyo → red, refutación → green), ambos con probabilidad "
+  "máxima. La misma evidencia textual que colapsó a una banda de 0,46–0,57 bajo el tipo "
+  "boolean produce una distinción perfecta bajo el tipo Choice.")
 table(["Caso", "Categoría", "P(red)", "P(green)"],
       [["TORN-1", "conflicto genuino", "0,85", "0,15"],
        ["TORN-2", "conflicto genuino", "0,84", "0,16"],
        ["SILENT-1", "ignorancia genuina", "0,67", "0,33"],
        ["SILENT-2", "ignorancia genuina", "0,77", "0,23"],
        ["AGREE-SUPPORT", "control: fuentes de acuerdo", "1,00", "0,00"],
-       ["AGREE-REFUTE", "control: fuentes de acuerdo", "sin datos (rate-limit, §8)", "—"]],
+       ["AGREE-REFUTE", "control: fuentes de acuerdo", "0,00", "1,00"]],
       "Tabla 4: Experimento 3 (tipo Choice binario, red/green sin categorías de escape).")
 P("Sin categorías de escape, Jev no reproduce el colapso a ~0,5 del Experimento 1 ni la "
   "separación perfecta del Experimento 2. Aparece, en cambio, un sesgo direccional hacia red "
-  "en los seis casos, más marcado en TORN (0,84–0,85) que en SILENT (0,67–0,77) — una "
-  "tendencia ordinal débil (n=2 por categoría) que no permite una conclusión firme. Es un "
-  "tercer patrón, no anticipado por ninguna de las dos hipótesis simples (colapso simétrico o "
-  "separación limpia).")
+  "en TORN y SILENT (0,67–0,85), más marcado en TORN (0,84–0,85) que en SILENT (0,67–0,77) — "
+  "una tendencia ordinal débil (n=2 por categoría) que no permite una conclusión firme. El "
+  "control de refutación (AGREE-REFUTE), con evidencia inequívoca de green, no sigue ese "
+  "sesgo: se clasifica de forma limpia y correcta (P(red)=0,00), igual de nítido que el "
+  "control de apoyo en la dirección opuesta. El sesgo hacia red, por tanto, no es un artefacto "
+  "indiscriminado del modelo — aparece únicamente en los casos con evidencia ambigua (TORN) o "
+  "ausente (SILENT). Es un tercer patrón, no anticipado por ninguna de las dos hipótesis "
+  "simples (colapso simétrico o separación limpia).")
 
 # ------------------------------------------------------------------ 7
 P("7 Discusión", "Section title")
@@ -390,6 +396,15 @@ P("La explicación más honesta disponible con estos datos, sin sobreinterpretar
   "eso produciría exactamente el patrón observado. Esta explicación es plausible y "
   "verificable, pero este trabajo no la probó de forma controlada — queda como pregunta "
   "abierta genuina, no como hallazgo cerrado.")
+P("El caso AGREE-REFUTE, completado en una llamada de seguimiento tras resolver el límite de "
+  "tasa (§8), ofrece una prueba adicional —no controlada, pero informativa— sobre esa "
+  "hipótesis léxica. Su texto también contiene literalmente la palabra \"red\" (\"the traffic "
+  "light was green, not red\"), en una cláusula de negación explícita. Si el sesgo fuera una "
+  "simple cuenta de superficie, cabría esperar cierta atracción hacia red también aquí. En "
+  "cambio, Jev clasifica este caso con probabilidad 1,00 hacia green (P(red)=0,00) — tan "
+  "nítido como el control de apoyo hacia red. Esto no descarta el confusor léxico de plano, "
+  "pero sí acota su alcance: el sesgo hacia red del Experimento 3 no es una cuenta ciega de "
+  "apariciones léxicas, y se concentra en los casos con evidencia ambigua o ausente.")
 P("Lo que sí se sostiene con los tres experimentos juntos: el argumento deductivo de la §4 "
   "(ningún escalar único puede ser inyectivo sobre un espacio de evidencia de mayor "
   "dimensión) explica el colapso del tipo Noul, pero no predice ni explica el patrón del "
@@ -403,12 +418,13 @@ P("Lo que sí se sostiene con los tres experimentos juntos: el argumento deducti
 
 # ------------------------------------------------------------------ 8
 P("8 Limitaciones", "Section title")
-P("(a) n=5 casos completados de 6 en cada uno de los tres experimentos (el control "
-  "AGREE-REFUTE falló por límite de tasa del nivel gratuito de Vercel AI Gateway en los "
-  "tres, incluso con un método de pago ya registrado — el proveedor exige créditos de pago "
-  "cargados, no solo una tarjeta en archivo, y ese paso no se completó; es el único caso que "
-  "nunca se pudo observar, en ninguna condición); (b) una sola llamada por caso en cada "
-  "experimento, sin repetición para estimar varianza — crítico para el Experimento 3, cuyo "
+P("(a) [RESUELTO 19-sep-2026] El control AGREE-REFUTE falló inicialmente por límite de tasa "
+  "del nivel gratuito de Vercel AI Gateway en los tres experimentos, incluso con un método de "
+  "pago ya registrado — el proveedor exige créditos de pago cargados, no solo una tarjeta en "
+  "archivo. Ese paso se completó el mismo día (compra de $20 de crédito), y el caso se corrió "
+  "en una llamada de seguimiento independiente; los tres experimentos tienen ahora n=6/6 "
+  "casos completos; (b) una sola llamada por caso en cada experimento, sin repetición para "
+  "estimar varianza — crítico para el Experimento 3, cuyo "
   "patrón (n=2 por categoría) no permite distinguir tendencia real de ruido de muestra; "
   "(c) los Experimentos 2 y 3 fueron motivados por resultados previos y no estaban "
   "preregistrados — se declara así explícitamente; (d) la explicación del sesgo léxico en el "
@@ -446,7 +462,8 @@ P("Disponibilidad de datos y código", "Section title")
 P("Repositorio público: https://github.com/mleyvaz/jev-typed-evaluation-collapse — incluye el "
   "script y resultados del Experimento 1 (run_experiment.mjs, results.json), del Experimento 2 "
   "(run_experiment_choice.mjs, results_choice.json), del Experimento 3 "
-  "(run_experiment_choice_binary.mjs, results_choice_binary.json), el script de la Figura 1 "
+  "(run_experiment_choice_binary.mjs, results_choice_binary.json), la llamada de seguimiento "
+  "que completó el caso AGREE-REFUTE (run_missing_refute.mjs), el script de la Figura 1 "
   "(make_fig1_taxonomy.py), y la ronda de revisión adversarial que motivó las revisiones "
   "v0.1 → v0.2 → v0.3.")
 
@@ -583,7 +600,7 @@ TORN-2:         {"wasRed":{"type":"boolean","probability":0.50}}
 SILENT-1:       {"wasRed":{"type":"boolean","probability":0.46}}
 SILENT-2:       {"wasRed":{"type":"boolean","probability":0.48}}
 AGREE-SUPPORT:  {"wasRed":{"type":"boolean","probability":0.83}}
-AGREE-REFUTE:   ERROR - GatewayRateLimitError (rate-limit del nivel gratuito, S8)
+AGREE-REFUTE:   {"wasRed":{"type":"boolean","probability":0.08}}
 """)
 
 P("Experimento 2 — Choice enriquecido:", bold=True)
@@ -598,7 +615,8 @@ SILENT-2:       {"lightState":{"choice":"insufficient_evidence","probabilities":
                   {"red":0,"green":0,"conflicting_evidence":0,"insufficient_evidence":1}}}
 AGREE-SUPPORT:  {"lightState":{"choice":"red","probabilities":
                   {"red":1,"green":0,"conflicting_evidence":0,"insufficient_evidence":0}}}
-AGREE-REFUTE:   ERROR - GatewayRateLimitError (rate-limit del nivel gratuito, S8)
+AGREE-REFUTE:   {"lightState":{"choice":"green","probabilities":
+                  {"red":0,"green":1,"conflicting_evidence":0,"insufficient_evidence":0}}}
 """)
 
 P("Experimento 3 — Choice binario:", bold=True)
@@ -608,7 +626,7 @@ TORN-2:         {"lightState":{"choice":"red","probabilities":{"red":0.84,"green
 SILENT-1:       {"lightState":{"choice":"red","probabilities":{"red":0.67,"green":0.33}}}
 SILENT-2:       {"lightState":{"choice":"red","probabilities":{"red":0.77,"green":0.23}}}
 AGREE-SUPPORT:  {"lightState":{"choice":"red","probabilities":{"red":1,"green":0}}}
-AGREE-REFUTE:   ERROR - GatewayRateLimitError (rate-limit del nivel gratuito, S8)
+AGREE-REFUTE:   {"lightState":{"choice":"green","probabilities":{"red":0,"green":1}}}
 """)
 
 doc.save(OUT)

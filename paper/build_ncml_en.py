@@ -312,23 +312,25 @@ table(["Case", "Category", "P(red)"],
        ["SILENT-1", "genuine ignorance (no witnesses or cameras)", "0.46"],
        ["SILENT-2", "genuine ignorance (lost record)", "0.48"],
        ["AGREE-SUPPORT", "control: sources agree (support)", "0.83"],
-       ["AGREE-REFUTE", "control: sources agree (refutation)", "no data (rate-limit, §8)"]],
+       ["AGREE-REFUTE", "control: sources agree (refutation)", "0.08"]],
       "Table 2: Experiment 1 (boolean/Noul type) — probability of \"red\".")
 P("The two TORN cases (0.50–0.57) and the two SILENT cases (0.46–0.48) fall within a common, "
-  "narrow band. The only completed control with unambiguous evidence (AGREE-SUPPORT) yields "
-  "0.83, far from 0.5.")
+  "narrow band. Both controls, with unambiguous evidence, yield values far from 0.5 in the "
+  "correct direction: 0.83 for support (\"red\" evidence) and 0.08 for refutation (\"green\" "
+  "evidence).")
 table(["Case", "Category", "Jev's choice", "P(choice)"],
       [["TORN-1", "genuine conflict", "conflicting_evidence", "1.00"],
        ["TORN-2", "genuine conflict", "conflicting_evidence", "1.00"],
        ["SILENT-1", "genuine ignorance", "insufficient_evidence", "1.00"],
        ["SILENT-2", "genuine ignorance", "insufficient_evidence", "1.00"],
        ["AGREE-SUPPORT", "control: sources agree", "red", "1.00"],
-       ["AGREE-REFUTE", "control: sources agree", "no data (rate-limit, §8)", "—"]],
+       ["AGREE-REFUTE", "control: sources agree", "green", "1.00"]],
       "Table 3: Experiment 2 (Choice type, enriched schema) — choice and probability.")
 P("With the Choice type and a schema that explicitly names \"conflicting evidence\" and "
   "\"insufficient evidence\" as first-class options, Jev separates the four experimental "
   "cases (TORN vs. SILENT) with maximum probability and no ambiguity, and correctly "
-  "classifies the support control. The same textual evidence that collapsed to a 0.46-0.57 "
+  "classifies both controls (support → red, refutation → green), both at maximum "
+  "probability. The same textual evidence that collapsed to a 0.46-0.57 "
   "band under the boolean type produces a perfect distinction under the Choice type.")
 table(["Case", "Category", "P(red)", "P(green)"],
       [["TORN-1", "genuine conflict", "0.85", "0.15"],
@@ -336,12 +338,17 @@ table(["Case", "Category", "P(red)", "P(green)"],
        ["SILENT-1", "genuine ignorance", "0.67", "0.33"],
        ["SILENT-2", "genuine ignorance", "0.77", "0.23"],
        ["AGREE-SUPPORT", "control: sources agree", "1.00", "0.00"],
-       ["AGREE-REFUTE", "control: sources agree", "no data (rate-limit, §8)", "—"]],
+       ["AGREE-REFUTE", "control: sources agree", "0.00", "1.00"]],
       "Table 4: Experiment 3 (binary Choice type, red/green, no escape categories).")
 P("Without escape categories, Jev does not reproduce the ~0.5 collapse of Experiment 1 nor "
   "the perfect separation of Experiment 2. Instead, a directional bias toward red appears "
-  "across all six cases, more pronounced in TORN (0.84-0.85) than in SILENT (0.67-0.77) — a "
-  "weak ordinal trend (n=2 per category) that does not allow a firm conclusion. It is a third "
+  "in TORN and SILENT (0.67-0.85), more pronounced in TORN (0.84-0.85) than in SILENT "
+  "(0.67-0.77) — a weak ordinal trend (n=2 per category) that does not allow a firm "
+  "conclusion. The refutation control (AGREE-REFUTE), with unambiguous green evidence, does "
+  "not follow that bias: it is classified cleanly and correctly (P(red)=0.00), just as "
+  "sharply as the support control in the opposite direction. The bias toward red is therefore "
+  "not an indiscriminate model artifact — it appears only in cases with ambiguous (TORN) or "
+  "absent (SILENT) evidence. It is a third "
   "pattern, unanticipated by either of the two simple hypotheses (symmetric collapse or clean "
   "separation).")
 
@@ -378,6 +385,16 @@ P("The most honest explanation available with this data, without over-interpreti
   "exactly the observed pattern. This explanation is plausible and testable, but this work "
   "did not test it in a controlled way — it remains a genuine open question, not a closed "
   "finding.")
+P("The AGREE-REFUTE case, completed in a follow-up call after resolving the rate limit (§8), "
+  "offers an additional — uncontrolled, but informative — test of that lexical "
+  "hypothesis. Its text also literally contains the word \"red\" (\"the traffic light was "
+  "green, not red\"), in an explicit negation clause. If the bias were a simple surface "
+  "count of that word's occurrences, some pull toward red would be expected here too. "
+  "Instead, Jev classifies this case with probability 1.00 toward green (P(red)=0.00) — "
+  "as clean as the support control's pull toward red. This does not rule out the lexical "
+  "confound outright, but it does narrow its scope: the red bias in Experiment 3 is not a "
+  "blind count of lexical occurrences, and it concentrates on cases with ambiguous or absent "
+  "evidence.")
 P("What does hold up across the three experiments together: the deductive argument in §4 (no "
   "single scalar can be injective over a higher-dimensional evidence space) explains the "
   "collapse of the Noul type, but does not predict or explain the pattern of Experiment 3 — a "
@@ -391,15 +408,17 @@ P("What does hold up across the three experiments together: the deductive argume
 
 # ------------------------------------------------------------------ 8
 P("8 Limitations", "Section title")
-P("(a) n=5 completed cases out of 6 in each of the three experiments (the AGREE-REFUTE "
-  "control failed due to the Vercel AI Gateway free tier's rate limit in all three, even with "
-  "a payment method already on file — the provider requires loaded paid credits, not just a "
-  "card on file, and that step was not completed; it is the only case that could never be "
-  "observed, under any condition); (b) a single call per case in each experiment, with no "
+P("(a) [RESOLVED 2026-09-19] The AGREE-REFUTE control initially failed due to the Vercel AI "
+  "Gateway free tier's rate limit in all three experiments, even with a payment method "
+  "already on file — the provider requires loaded paid credits, not just a card on file. "
+  "That step was completed the same day (a $20 credit purchase), and the case was run in an "
+  "independent follow-up call; all three experiments now have n=6/6 complete cases; "
+  "(b) a single call per case in each experiment, with no "
   "repetition to estimate variance — critical for Experiment 3, whose pattern (n=2 per "
   "category) does not allow distinguishing a real trend from sample noise; (c) Experiments 2 "
   "and 3 were motivated by prior results and were not preregistered — explicitly declared as "
-  "such; (d) the lexical-bias explanation for Experiment 3 (§7) is plausible but was not "
+  "such; (d) the lexical-bias explanation for Experiment 3 (§7) is plausible and received "
+  "additional support from the AGREE-REFUTE case, but was not "
   "tested in a controlled way; (e) this is a four-day-old product at the time of writing — "
   "its behavior and limits may change without notice, and these results should be read as a "
   "snapshot of 2026-09-19; (f) the speed, cost, and training-method (RLCD) figures are vendor "
@@ -433,7 +452,8 @@ P("Data and Code Availability", "Section title")
 P("Public repository: https://github.com/mleyvaz/jev-typed-evaluation-collapse — includes "
   "the script and results of Experiment 1 (run_experiment.mjs, results.json), Experiment 2 "
   "(run_experiment_choice.mjs, results_choice.json), Experiment 3 "
-  "(run_experiment_choice_binary.mjs, results_choice_binary.json), the Figure 1 script "
+  "(run_experiment_choice_binary.mjs, results_choice_binary.json), the follow-up call that "
+  "completed the AGREE-REFUTE case (run_missing_refute.mjs), the Figure 1 script "
   "(make_fig1_taxonomy.py), and the adversarial review round that motivated the v0.1 → v0.2 "
   "→ v0.3 revisions.")
 
@@ -570,7 +590,7 @@ TORN-2:         {"wasRed":{"type":"boolean","probability":0.50}}
 SILENT-1:       {"wasRed":{"type":"boolean","probability":0.46}}
 SILENT-2:       {"wasRed":{"type":"boolean","probability":0.48}}
 AGREE-SUPPORT:  {"wasRed":{"type":"boolean","probability":0.83}}
-AGREE-REFUTE:   ERROR - GatewayRateLimitError (free-tier rate limit, S8)
+AGREE-REFUTE:   {"wasRed":{"type":"boolean","probability":0.08}}
 """)
 
 P("Experiment 2 — enriched Choice:", bold=True)
@@ -585,7 +605,8 @@ SILENT-2:       {"lightState":{"choice":"insufficient_evidence","probabilities":
                   {"red":0,"green":0,"conflicting_evidence":0,"insufficient_evidence":1}}}
 AGREE-SUPPORT:  {"lightState":{"choice":"red","probabilities":
                   {"red":1,"green":0,"conflicting_evidence":0,"insufficient_evidence":0}}}
-AGREE-REFUTE:   ERROR - GatewayRateLimitError (free-tier rate limit, S8)
+AGREE-REFUTE:   {"lightState":{"choice":"green","probabilities":
+                  {"red":0,"green":1,"conflicting_evidence":0,"insufficient_evidence":0}}}
 """)
 
 P("Experiment 3 — binary Choice:", bold=True)
@@ -595,7 +616,7 @@ TORN-2:         {"lightState":{"choice":"red","probabilities":{"red":0.84,"green
 SILENT-1:       {"lightState":{"choice":"red","probabilities":{"red":0.67,"green":0.33}}}
 SILENT-2:       {"lightState":{"choice":"red","probabilities":{"red":0.77,"green":0.23}}}
 AGREE-SUPPORT:  {"lightState":{"choice":"red","probabilities":{"red":1,"green":0}}}
-AGREE-REFUTE:   ERROR - GatewayRateLimitError (free-tier rate limit, S8)
+AGREE-REFUTE:   {"lightState":{"choice":"green","probabilities":{"red":0,"green":1}}}
 """)
 
 doc.save(OUT)
