@@ -1,0 +1,753 @@
+[
+  {
+    "id": "TORN-1",
+    "category": "TORN (conflicto genuino)",
+    "state": "Witness A, a police officer with a clear view of the intersection, testified under oath that the traffic light was red at the moment of the collision. Witness B, a bystander standing next to Witness A with an equally clear view, testified under oath that the same traffic light was green at that exact moment. Both witnesses are considered reliable by the investigating officer; there is no indication either one is lying.",
+    "raw": {
+      "answers": {
+        "lightState": {
+          "type": "choice",
+          "choice": "red",
+          "probabilities": {
+            "red": 0.85,
+            "green": 0.15
+          }
+        }
+      },
+      "usage": {
+        "inputTokens": 413,
+        "outputTokens": 32,
+        "totalTokens": 445
+      },
+      "warnings": [],
+      "rounding": {
+        "probabilityDecimals": 2,
+        "scoreDecimals": 2
+      },
+      "providerMetadata": {
+        "typesafe": {
+          "confidence": {
+            "lightState": 0.7
+          }
+        },
+        "gateway": {
+          "routing": {
+            "originalModelId": "typesafe-ai/jev",
+            "resolvedProvider": "typesafe-ai",
+            "fallbacksAvailable": [],
+            "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+            "canonicalSlug": "typesafe-ai/jev",
+            "finalProvider": "typesafe-ai",
+            "modelAttemptCount": 1,
+            "modelAttempts": [
+              {
+                "canonicalSlug": "typesafe-ai/jev",
+                "success": true,
+                "providerAttemptCount": 1,
+                "providerAttempts": [
+                  {
+                    "provider": "typesafe-ai",
+                    "credentialType": "system",
+                    "success": true,
+                    "startTime": 1789803563281,
+                    "endTime": 1789803563455,
+                    "statusCode": 200
+                  }
+                ]
+              }
+            ],
+            "totalProviderAttemptCount": 1
+          },
+          "cost": "0",
+          "marketCost": "0.000017346",
+          "surchargeCost": "0",
+          "gatewayCost": "0",
+          "generationId": "gen_01M2W9P1YWPJM1B1BJFKC07S2A"
+        }
+      },
+      "response": {
+        "modelId": "typesafe-ai/jev",
+        "headers": {
+          "access-control-allow-headers": "Content-Type, Authorization, ai-gateway-auth-method, ai-gateway-protocol-version, ai-model-id, ai-language-model-id, ai-language-model-specification-version, ai-image-model-specification-version, ai-embedding-model-specification-version, ai-language-model-streaming, ai-reporting-tags, ai-reporting-user, http-referer, x-title, x-ai-gateway-api-key, x-api-key, anthropic-beta, anthropic-version, idempotency-key, x-vercel-ai-gateway-team, x-vercel-gateway-extended-time, x-session-id, x-session-affinity",
+          "access-control-allow-methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          "access-control-allow-origin": "*",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "content-encoding": "br",
+          "content-type": "application/json",
+          "date": "Sat, 19 Sep 2026 07:39:23 GMT",
+          "server": "Vercel",
+          "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+          "transfer-encoding": "chunked",
+          "x-matched-path": "/v4/ai/evaluation-model",
+          "x-vercel-cache": "MISS",
+          "x-vercel-id": "iad1::iad1::ftdv9-1789803562945-d258250a8ca9"
+        },
+        "body": {
+          "answers": {
+            "lightState": {
+              "type": "choice",
+              "choice": "red",
+              "probabilities": {
+                "red": 0.85,
+                "green": 0.15
+              }
+            }
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "usage": {
+            "inputTokens": 413,
+            "outputTokens": 32
+          },
+          "warnings": [],
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "lightState": 0.7
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789803563281,
+                        "endTime": 1789803563455,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.000017346",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W9P1YWPJM1B1BJFKC07S2A"
+            }
+          }
+        },
+        "timestamp": "2026-09-19T07:39:23.526Z"
+      }
+    }
+  },
+  {
+    "id": "TORN-2",
+    "category": "TORN (conflicto genuino)",
+    "state": "Sensor 1, a calibrated high-precision traffic sensor, recorded the light as RED at 14:03:02. Sensor 2, an equally calibrated high-precision sensor mounted on the same pole, recorded the light as GREEN at the same timestamp, 14:03:02. Both sensors passed their most recent calibration check with no faults reported.",
+    "raw": {
+      "answers": {
+        "lightState": {
+          "type": "choice",
+          "choice": "red",
+          "probabilities": {
+            "green": 0.16,
+            "red": 0.84
+          }
+        }
+      },
+      "usage": {
+        "inputTokens": 413,
+        "outputTokens": 32,
+        "totalTokens": 445
+      },
+      "warnings": [],
+      "rounding": {
+        "probabilityDecimals": 2,
+        "scoreDecimals": 2
+      },
+      "providerMetadata": {
+        "typesafe": {
+          "confidence": {
+            "lightState": 0.69
+          }
+        },
+        "gateway": {
+          "routing": {
+            "originalModelId": "typesafe-ai/jev",
+            "resolvedProvider": "typesafe-ai",
+            "fallbacksAvailable": [],
+            "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+            "canonicalSlug": "typesafe-ai/jev",
+            "finalProvider": "typesafe-ai",
+            "modelAttemptCount": 1,
+            "modelAttempts": [
+              {
+                "canonicalSlug": "typesafe-ai/jev",
+                "success": true,
+                "providerAttemptCount": 1,
+                "providerAttempts": [
+                  {
+                    "provider": "typesafe-ai",
+                    "credentialType": "system",
+                    "success": true,
+                    "startTime": 1789803563680,
+                    "endTime": 1789803563871,
+                    "statusCode": 200
+                  }
+                ]
+              }
+            ],
+            "totalProviderAttemptCount": 1
+          },
+          "cost": "0",
+          "marketCost": "0.000017346",
+          "surchargeCost": "0",
+          "gatewayCost": "0",
+          "generationId": "gen_01M2W9P2JDWH9F71D7K7S0ARNQ"
+        }
+      },
+      "response": {
+        "modelId": "typesafe-ai/jev",
+        "headers": {
+          "access-control-allow-headers": "Content-Type, Authorization, ai-gateway-auth-method, ai-gateway-protocol-version, ai-model-id, ai-language-model-id, ai-language-model-specification-version, ai-image-model-specification-version, ai-embedding-model-specification-version, ai-language-model-streaming, ai-reporting-tags, ai-reporting-user, http-referer, x-title, x-ai-gateway-api-key, x-api-key, anthropic-beta, anthropic-version, idempotency-key, x-vercel-ai-gateway-team, x-vercel-gateway-extended-time, x-session-id, x-session-affinity",
+          "access-control-allow-methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          "access-control-allow-origin": "*",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "content-encoding": "br",
+          "content-type": "application/json",
+          "date": "Sat, 19 Sep 2026 07:39:23 GMT",
+          "server": "Vercel",
+          "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+          "transfer-encoding": "chunked",
+          "x-matched-path": "/v4/ai/evaluation-model",
+          "x-vercel-cache": "MISS",
+          "x-vercel-id": "iad1::iad1::gp29f-1789803563583-71d8facbc8f8"
+        },
+        "body": {
+          "answers": {
+            "lightState": {
+              "type": "choice",
+              "choice": "red",
+              "probabilities": {
+                "green": 0.16,
+                "red": 0.84
+              }
+            }
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "usage": {
+            "inputTokens": 413,
+            "outputTokens": 32
+          },
+          "warnings": [],
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "lightState": 0.69
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789803563680,
+                        "endTime": 1789803563871,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.000017346",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W9P2JDWH9F71D7K7S0ARNQ"
+            }
+          }
+        },
+        "timestamp": "2026-09-19T07:39:23.926Z"
+      }
+    }
+  },
+  {
+    "id": "SILENT-1",
+    "category": "SILENT (ignorancia genuina)",
+    "state": "No witnesses were present at the intersection at the time in question. No traffic cameras were operating in that area that day. There is no record, sensor log, or testimony of any kind describing the state of the traffic light at that moment.",
+    "raw": {
+      "answers": {
+        "lightState": {
+          "type": "choice",
+          "choice": "red",
+          "probabilities": {
+            "red": 0.67,
+            "green": 0.33
+          }
+        }
+      },
+      "usage": {
+        "inputTokens": 379,
+        "outputTokens": 32,
+        "totalTokens": 411
+      },
+      "warnings": [],
+      "rounding": {
+        "probabilityDecimals": 2,
+        "scoreDecimals": 2
+      },
+      "providerMetadata": {
+        "typesafe": {
+          "confidence": {
+            "lightState": 0.34
+          }
+        },
+        "gateway": {
+          "routing": {
+            "originalModelId": "typesafe-ai/jev",
+            "resolvedProvider": "typesafe-ai",
+            "fallbacksAvailable": [],
+            "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+            "canonicalSlug": "typesafe-ai/jev",
+            "finalProvider": "typesafe-ai",
+            "modelAttemptCount": 1,
+            "modelAttempts": [
+              {
+                "canonicalSlug": "typesafe-ai/jev",
+                "success": true,
+                "providerAttemptCount": 1,
+                "providerAttempts": [
+                  {
+                    "provider": "typesafe-ai",
+                    "credentialType": "system",
+                    "success": true,
+                    "startTime": 1789803564075,
+                    "endTime": 1789803564192,
+                    "statusCode": 200
+                  }
+                ]
+              }
+            ],
+            "totalProviderAttemptCount": 1
+          },
+          "cost": "0",
+          "marketCost": "0.000015918",
+          "surchargeCost": "0",
+          "gatewayCost": "0",
+          "generationId": "gen_01M2W9P2YQ5B0FZ6950NR0DT51"
+        }
+      },
+      "response": {
+        "modelId": "typesafe-ai/jev",
+        "headers": {
+          "access-control-allow-headers": "Content-Type, Authorization, ai-gateway-auth-method, ai-gateway-protocol-version, ai-model-id, ai-language-model-id, ai-language-model-specification-version, ai-image-model-specification-version, ai-embedding-model-specification-version, ai-language-model-streaming, ai-reporting-tags, ai-reporting-user, http-referer, x-title, x-ai-gateway-api-key, x-api-key, anthropic-beta, anthropic-version, idempotency-key, x-vercel-ai-gateway-team, x-vercel-gateway-extended-time, x-session-id, x-session-affinity",
+          "access-control-allow-methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          "access-control-allow-origin": "*",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "content-encoding": "br",
+          "content-type": "application/json",
+          "date": "Sat, 19 Sep 2026 07:39:24 GMT",
+          "server": "Vercel",
+          "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+          "transfer-encoding": "chunked",
+          "x-matched-path": "/v4/ai/evaluation-model",
+          "x-vercel-cache": "MISS",
+          "x-vercel-id": "iad1::iad1::t5kdx-1789803563981-89144240e646"
+        },
+        "body": {
+          "answers": {
+            "lightState": {
+              "type": "choice",
+              "choice": "red",
+              "probabilities": {
+                "red": 0.67,
+                "green": 0.33
+              }
+            }
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "usage": {
+            "inputTokens": 379,
+            "outputTokens": 32
+          },
+          "warnings": [],
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "lightState": 0.34
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789803564075,
+                        "endTime": 1789803564192,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.000015918",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W9P2YQ5B0FZ6950NR0DT51"
+            }
+          }
+        },
+        "timestamp": "2026-09-19T07:39:24.242Z"
+      }
+    }
+  },
+  {
+    "id": "SILENT-2",
+    "category": "SILENT (ignorancia genuina)",
+    "state": "The traffic light's camera log for that day was permanently lost in a server failure before any backup was made. No witnesses have come forward. No other observation of the light exists in any form.",
+    "raw": {
+      "answers": {
+        "lightState": {
+          "type": "choice",
+          "choice": "red",
+          "probabilities": {
+            "green": 0.23,
+            "red": 0.77
+          }
+        }
+      },
+      "usage": {
+        "inputTokens": 370,
+        "outputTokens": 32,
+        "totalTokens": 402
+      },
+      "warnings": [],
+      "rounding": {
+        "probabilityDecimals": 2,
+        "scoreDecimals": 2
+      },
+      "providerMetadata": {
+        "typesafe": {
+          "confidence": {
+            "lightState": 0.55
+          }
+        },
+        "gateway": {
+          "routing": {
+            "originalModelId": "typesafe-ai/jev",
+            "resolvedProvider": "typesafe-ai",
+            "fallbacksAvailable": [],
+            "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+            "canonicalSlug": "typesafe-ai/jev",
+            "finalProvider": "typesafe-ai",
+            "modelAttemptCount": 1,
+            "modelAttempts": [
+              {
+                "canonicalSlug": "typesafe-ai/jev",
+                "success": true,
+                "providerAttemptCount": 1,
+                "providerAttempts": [
+                  {
+                    "provider": "typesafe-ai",
+                    "credentialType": "system",
+                    "success": true,
+                    "startTime": 1789803564367,
+                    "endTime": 1789803564540,
+                    "statusCode": 200
+                  }
+                ]
+              }
+            ],
+            "totalProviderAttemptCount": 1
+          },
+          "cost": "0",
+          "marketCost": "0.00001554",
+          "surchargeCost": "0",
+          "gatewayCost": "0",
+          "generationId": "gen_01M2W9P38S1J6HGA28Q5QVNYKV"
+        }
+      },
+      "response": {
+        "modelId": "typesafe-ai/jev",
+        "headers": {
+          "access-control-allow-headers": "Content-Type, Authorization, ai-gateway-auth-method, ai-gateway-protocol-version, ai-model-id, ai-language-model-id, ai-language-model-specification-version, ai-image-model-specification-version, ai-embedding-model-specification-version, ai-language-model-streaming, ai-reporting-tags, ai-reporting-user, http-referer, x-title, x-ai-gateway-api-key, x-api-key, anthropic-beta, anthropic-version, idempotency-key, x-vercel-ai-gateway-team, x-vercel-gateway-extended-time, x-session-id, x-session-affinity",
+          "access-control-allow-methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          "access-control-allow-origin": "*",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "content-encoding": "br",
+          "content-type": "application/json",
+          "date": "Sat, 19 Sep 2026 07:39:24 GMT",
+          "server": "Vercel",
+          "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+          "transfer-encoding": "chunked",
+          "x-matched-path": "/v4/ai/evaluation-model",
+          "x-vercel-cache": "MISS",
+          "x-vercel-id": "iad1::iad1::ftdv9-1789803564303-6556aa2b263a"
+        },
+        "body": {
+          "answers": {
+            "lightState": {
+              "type": "choice",
+              "choice": "red",
+              "probabilities": {
+                "green": 0.23,
+                "red": 0.77
+              }
+            }
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "usage": {
+            "inputTokens": 370,
+            "outputTokens": 32
+          },
+          "warnings": [],
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "lightState": 0.55
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789803564367,
+                        "endTime": 1789803564540,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.00001554",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W9P38S1J6HGA28Q5QVNYKV"
+            }
+          }
+        },
+        "timestamp": "2026-09-19T07:39:24.588Z"
+      }
+    }
+  },
+  {
+    "id": "AGREE-SUPPORT",
+    "category": "control: ambas fuentes de acuerdo (apoyo)",
+    "state": "Witness A testified that the traffic light was red at the time of the collision. Witness B, standing nearby with an independent line of sight, separately and independently confirmed that the light was red at that same moment.",
+    "raw": {
+      "answers": {
+        "lightState": {
+          "type": "choice",
+          "choice": "red",
+          "probabilities": {
+            "red": 1,
+            "green": 0
+          }
+        }
+      },
+      "usage": {
+        "inputTokens": 373,
+        "outputTokens": 32,
+        "totalTokens": 405
+      },
+      "warnings": [],
+      "rounding": {
+        "probabilityDecimals": 2,
+        "scoreDecimals": 2
+      },
+      "providerMetadata": {
+        "typesafe": {
+          "confidence": {
+            "lightState": 1
+          }
+        },
+        "gateway": {
+          "routing": {
+            "originalModelId": "typesafe-ai/jev",
+            "resolvedProvider": "typesafe-ai",
+            "fallbacksAvailable": [],
+            "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+            "canonicalSlug": "typesafe-ai/jev",
+            "finalProvider": "typesafe-ai",
+            "modelAttemptCount": 1,
+            "modelAttempts": [
+              {
+                "canonicalSlug": "typesafe-ai/jev",
+                "success": true,
+                "providerAttemptCount": 1,
+                "providerAttempts": [
+                  {
+                    "provider": "typesafe-ai",
+                    "credentialType": "system",
+                    "success": true,
+                    "startTime": 1789803564779,
+                    "endTime": 1789803564917,
+                    "statusCode": 200
+                  }
+                ]
+              }
+            ],
+            "totalProviderAttemptCount": 1
+          },
+          "cost": "0",
+          "marketCost": "0.000015666",
+          "surchargeCost": "0",
+          "gatewayCost": "0",
+          "generationId": "gen_01M2W9P3M0C273ATDPY7HCS7D3"
+        }
+      },
+      "response": {
+        "modelId": "typesafe-ai/jev",
+        "headers": {
+          "access-control-allow-headers": "Content-Type, Authorization, ai-gateway-auth-method, ai-gateway-protocol-version, ai-model-id, ai-language-model-id, ai-language-model-specification-version, ai-image-model-specification-version, ai-embedding-model-specification-version, ai-language-model-streaming, ai-reporting-tags, ai-reporting-user, http-referer, x-title, x-ai-gateway-api-key, x-api-key, anthropic-beta, anthropic-version, idempotency-key, x-vercel-ai-gateway-team, x-vercel-gateway-extended-time, x-session-id, x-session-affinity",
+          "access-control-allow-methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          "access-control-allow-origin": "*",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "content-encoding": "br",
+          "content-type": "application/json",
+          "date": "Sat, 19 Sep 2026 07:39:24 GMT",
+          "server": "Vercel",
+          "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+          "transfer-encoding": "chunked",
+          "x-matched-path": "/v4/ai/evaluation-model",
+          "x-vercel-cache": "MISS",
+          "x-vercel-id": "iad1::iad1::z6w8j-1789803564652-f497b45ab20c"
+        },
+        "body": {
+          "answers": {
+            "lightState": {
+              "type": "choice",
+              "choice": "red",
+              "probabilities": {
+                "red": 1,
+                "green": 0
+              }
+            }
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "usage": {
+            "inputTokens": 373,
+            "outputTokens": 32
+          },
+          "warnings": [],
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "lightState": 1
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789803564779,
+                        "endTime": 1789803564917,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.000015666",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W9P3M0C273ATDPY7HCS7D3"
+            }
+          }
+        },
+        "timestamp": "2026-09-19T07:39:24.968Z"
+      }
+    }
+  },
+  {
+    "id": "AGREE-REFUTE",
+    "category": "control: ambas fuentes de acuerdo (refutacion)",
+    "state": "Witness A testified that the traffic light was green, not red, at the time of the collision. Witness B, standing nearby with an independent line of sight, separately and independently confirmed that the light was green at that same moment.",
+    "error": "Failed after 3 attempts. Last error: GatewayRateLimitError: Free tier requests on this model are rate-limited. Upgrade to paid credits at https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dtop-up for unrestricted access."
+  }
+]

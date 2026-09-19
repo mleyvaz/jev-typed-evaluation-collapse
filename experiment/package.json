@@ -1,0 +1,13 @@
+{
+  "name": "jev-typed-eval-experiment",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Experimento NCML: Jev (typesafe-ai/jev) frente a colapso de conflicto/ignorancia (AET reflection invariance)",
+  "scripts": {
+    "run": "node run_experiment.mjs"
+  },
+  "dependencies": {
+    "ai": "^7.0.107"
+  }
+}
