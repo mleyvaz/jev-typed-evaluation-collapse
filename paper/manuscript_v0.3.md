@@ -169,7 +169,7 @@ La lección que sobrevive a los tres experimentos no es sobre un límite fijo de
 
 [14] Gu, J., Jiang, X., Shi, Z., Tian, H., Zhai, X., Xu, C., et al. (2026). *A survey on LLM-as-a-judge*. **The Innovation**, 7(6), 101253. https://www.sciencedirect.com/science/article/pii/S2666675825004564
 
-**Datos y código:** repositorio público (§ enlace en portada / nota final), con `run_experiment.mjs` + `results.json` (Experimento 1), `run_experiment_choice.mjs` + `results_choice.json` (Experimento 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experimento 3), y `make_fig1_taxonomy.py` (Figura 1). Reproducible con una llave propia de AI Gateway.
+**Datos y código:** repositorio público — https://github.com/mleyvaz/jev-typed-evaluation-collapse — con `run_experiment.mjs` + `results.json` (Experimento 1), `run_experiment_choice.mjs` + `results_choice.json` (Experimento 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experimento 3), y `make_fig1_taxonomy.py` (Figura 1). Reproducible con una llave propia de AI Gateway.
 
 ---
 

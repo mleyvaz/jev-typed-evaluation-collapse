@@ -71,6 +71,21 @@ def table(headers, rows, legend):
     return t
 
 
+def code_block(text, size=8):
+    """Bloque de codigo monoespaciado (Courier New), una linea por parrafo."""
+    for line in text.strip("\n").split("\n"):
+        p = doc.add_paragraph(style="Paper text" if "Paper text" in S else "Normal")
+        pf = p.paragraph_format
+        pf.line_spacing_rule = WD_LINE_SPACING.SINGLE
+        pf.space_before = Pt(0)
+        pf.space_after = Pt(0)
+        r = p.add_run(line if line.strip() else " ")
+        r.font.name = "Courier New"
+        r.font.size = Pt(size)
+    p2 = doc.add_paragraph(style="Paper text" if "Paper text" in S else "Normal")
+    p2.paragraph_format.space_after = Pt(6)
+
+
 def figure(img, caption, width_cm=13.5):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -428,10 +443,12 @@ P("La lección que sobrevive a los tres experimentos no es sobre un límite fijo
 P("Conflicto de intereses", "Section title")
 P("El autor declara no tener ningún conflicto de intereses.")
 P("Disponibilidad de datos y código", "Section title")
-P("El script y resultados del Experimento 1 (run_experiment.mjs, results.json), del "
-  "Experimento 2 (run_experiment_choice.mjs, results_choice.json) y del Experimento 3 "
-  "(run_experiment_choice_binary.mjs, results_choice_binary.json), y el script de la Figura 1 "
-  "(make_fig1_taxonomy.py), están disponibles a solicitud del autor de correspondencia.")
+P("Repositorio público: https://github.com/mleyvaz/jev-typed-evaluation-collapse — incluye el "
+  "script y resultados del Experimento 1 (run_experiment.mjs, results.json), del Experimento 2 "
+  "(run_experiment_choice.mjs, results_choice.json), del Experimento 3 "
+  "(run_experiment_choice_binary.mjs, results_choice_binary.json), el script de la Figura 1 "
+  "(make_fig1_taxonomy.py), y la ronda de revisión adversarial que motivó las revisiones "
+  "v0.1 → v0.2 → v0.3.")
 
 # ------------------------------------------------------------------ referencias
 P("Referencias", "Section title")
@@ -458,5 +475,141 @@ P()
 P("Received: September 19, 2026.   Accepted: —",
   "Received and accepted", WD_ALIGN_PARAGRAPH.RIGHT)
 
+# ------------------------------------------------------------------ Anexo A
+P("Anexo A. Estados de entrada (verbatim)", "Section title")
+P("Los seis estados (state) usados en los tres experimentos, idénticos en cada uno — solo "
+  "cambia la pregunta (questions) que se declara sobre ellos.")
+
+estados = [
+    ("TORN-1 (conflicto genuino)",
+     "Witness A, a police officer with a clear view of the intersection, testified under oath "
+     "that the traffic light was red at the moment of the collision. Witness B, a bystander "
+     "standing next to Witness A with an equally clear view, testified under oath that the "
+     "same traffic light was green at that exact moment. Both witnesses are considered "
+     "reliable by the investigating officer; there is no indication either one is lying."),
+    ("TORN-2 (conflicto genuino)",
+     "Sensor 1, a calibrated high-precision traffic sensor, recorded the light as RED at "
+     "14:03:02. Sensor 2, an equally calibrated high-precision sensor mounted on the same "
+     "pole, recorded the light as GREEN at the same timestamp, 14:03:02. Both sensors passed "
+     "their most recent calibration check with no faults reported."),
+    ("SILENT-1 (ignorancia genuina)",
+     "No witnesses were present at the intersection at the time in question. No traffic "
+     "cameras were operating in that area that day. There is no record, sensor log, or "
+     "testimony of any kind describing the state of the traffic light at that moment."),
+    ("SILENT-2 (ignorancia genuina)",
+     "The traffic light's camera log for that day was permanently lost in a server failure "
+     "before any backup was made. No witnesses have come forward. No other observation of the "
+     "light exists in any form."),
+    ("AGREE-SUPPORT (control, apoyo)",
+     "Witness A testified that the traffic light was red at the time of the collision. "
+     "Witness B, standing nearby with an independent line of sight, separately and "
+     "independently confirmed that the light was red at that same moment."),
+    ("AGREE-REFUTE (control, refutación)",
+     "Witness A testified that the traffic light was green, not red, at the time of the "
+     "collision. Witness B, standing nearby with an independent line of sight, separately and "
+     "independently confirmed that the light was green at that same moment."),
+]
+for titulo, texto in estados:
+    P(titulo, bold=True)
+    P(texto, italic=True)
+
+# ------------------------------------------------------------------ Anexo B
+P("Anexo B. Código de la llamada, por experimento", "Section title")
+
+P("Experimento 1 (boolean/Noul):", bold=True)
+code_block("""
+import { experimental_evaluate as evaluate } from 'ai';
+
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT, // uno de los seis estados del Anexo A
+  questions: {
+    wasRed: {
+      type: 'boolean',
+      instructions: 'Was the traffic light red at the time in question?',
+    },
+  },
+});
+""")
+
+P("Experimento 2 (Choice, esquema enriquecido):", bold=True)
+code_block("""
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT,
+  questions: {
+    lightState: {
+      type: 'choice',
+      instructions: 'What was the state of the traffic light at the time in question?',
+      criteria: {
+        red: 'The evidence indicates the light was red.',
+        green: 'The evidence indicates the light was green (not red).',
+        conflicting_evidence: 'Reliable sources disagree with each other about the color.',
+        insufficient_evidence: 'There is no evidence available to determine the color.',
+      },
+    },
+  },
+});
+""")
+
+P("Experimento 3 (Choice binario, sin categorías de escape):", bold=True)
+code_block("""
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT,
+  questions: {
+    lightState: {
+      type: 'choice',
+      instructions: 'What was the state of the traffic light at the time in question?',
+      criteria: {
+        red: 'The evidence indicates the light was red.',
+        green: 'The evidence indicates the light was green (not red).',
+      },
+    },
+  },
+});
+""")
+
+# ------------------------------------------------------------------ Anexo C
+P("Anexo C. Respuesta completa (answers) por caso", "Section title")
+P("Objeto answers devuelto por Jev para cada caso completado, sin editar (el objeto completo "
+  "de respuesta incluye además usage, warnings, rounding y providerMetadata, disponibles en "
+  "los archivos results*.json del repositorio).")
+
+P("Experimento 1 — boolean/Noul:", bold=True)
+code_block("""
+TORN-1:         {"wasRed":{"type":"boolean","probability":0.57}}
+TORN-2:         {"wasRed":{"type":"boolean","probability":0.50}}
+SILENT-1:       {"wasRed":{"type":"boolean","probability":0.46}}
+SILENT-2:       {"wasRed":{"type":"boolean","probability":0.48}}
+AGREE-SUPPORT:  {"wasRed":{"type":"boolean","probability":0.83}}
+AGREE-REFUTE:   ERROR - GatewayRateLimitError (rate-limit del nivel gratuito, S8)
+""")
+
+P("Experimento 2 — Choice enriquecido:", bold=True)
+code_block("""
+TORN-1:         {"lightState":{"choice":"conflicting_evidence","probabilities":
+                  {"red":0,"green":0,"conflicting_evidence":1,"insufficient_evidence":0}}}
+TORN-2:         {"lightState":{"choice":"conflicting_evidence","probabilities":
+                  {"red":0,"green":0,"conflicting_evidence":1,"insufficient_evidence":0}}}
+SILENT-1:       {"lightState":{"choice":"insufficient_evidence","probabilities":
+                  {"red":0,"green":0,"conflicting_evidence":0,"insufficient_evidence":1}}}
+SILENT-2:       {"lightState":{"choice":"insufficient_evidence","probabilities":
+                  {"red":0,"green":0,"conflicting_evidence":0,"insufficient_evidence":1}}}
+AGREE-SUPPORT:  {"lightState":{"choice":"red","probabilities":
+                  {"red":1,"green":0,"conflicting_evidence":0,"insufficient_evidence":0}}}
+AGREE-REFUTE:   ERROR - GatewayRateLimitError (rate-limit del nivel gratuito, S8)
+""")
+
+P("Experimento 3 — Choice binario:", bold=True)
+code_block("""
+TORN-1:         {"lightState":{"choice":"red","probabilities":{"red":0.85,"green":0.15}}}
+TORN-2:         {"lightState":{"choice":"red","probabilities":{"red":0.84,"green":0.16}}}
+SILENT-1:       {"lightState":{"choice":"red","probabilities":{"red":0.67,"green":0.33}}}
+SILENT-2:       {"lightState":{"choice":"red","probabilities":{"red":0.77,"green":0.23}}}
+AGREE-SUPPORT:  {"lightState":{"choice":"red","probabilities":{"red":1,"green":0}}}
+AGREE-REFUTE:   ERROR - GatewayRateLimitError (rate-limit del nivel gratuito, S8)
+""")
+
 doc.save(OUT)
-print("Formato NCML v0.2 ->", OUT)
+print("Formato NCML v0.3 ->", OUT)
