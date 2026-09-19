@@ -4,13 +4,13 @@
 
 ¹ Universidad Bernardo O'Higgins (UBO), Santiago, Chile. ² Universidad Bolivariana del Ecuador (UBE), Guayaquil, Ecuador. ³ Universidad de Guayaquil, Guayaquil, Ecuador.
 
-*Draft v0.3 (English) — target: NCML. Field note, not part of the author's own Q1 line. Revised after a 5-model adversarial review round and two follow-up experiments (enriched Choice, binary Choice). Update 2026-09-19: the AGREE-REFUTE case was completed in all three experiments after resolving the rate limit (§8).*
+*Draft v0.3 (English) — target: NCML. Field note, not part of the author's own Q1 line. Revised after a 5-model adversarial review round and two follow-up experiments (enriched Choice, binary Choice). Update 2026-09-19: the AGREE-REFUTE case was completed in all three experiments after resolving the rate limit (§8); added an exploratory Experiment 4 (Score type, graded determinacy).*
 
 ---
 
 ## Abstract
 
-Chat-based LLMs return free text that must be interpreted; a category of tools that emerged in September 2026, *typed evaluation models* ("System One models"), instead return a typed object directly usable by software. Jev (TypeSafe AI, reported by the vendor as launched on September 15, 2026) is the first commercial example of this category. This work situates it within a five-category landscape of AI model interaction and tests, with a minimal experiment, a prediction derived from annotated decision theory: that an output collapsed to a single calibrated probability cannot distinguish *genuine conflict* from *genuine ignorance*. For Jev's simplest question type (`boolean`/Noul), the experiment is consistent with that prediction: conflict cases (probability 0.50–0.57) and ignorance cases (0.46–0.48) fall within the same narrow band, indistinguishable without further context. But a second experiment, using the same model's `Choice` type with a schema that explicitly names "conflicting evidence" and "insufficient evidence" as options, separates both cases with probability 1.0 in all four completed cases. A third experiment, with `Choice` restricted to the two original options (`red`/`green`, no escape categories), reproduces neither the ~0.5 collapse of the first experiment nor the clean separation of the second: a directional bias toward "red" appears (0.67–0.85 depending on the case) that correlates with the lexical presence of the word "red" in the state, not cleanly with the TORN/SILENT category. The central finding, therefore, is not that Jev collapses per se, but that **the same model preserves, destroys, or unpredictably distorts the distinction depending on the question type and the declared schema** — an interface design risk more complex than a single follow-up experiment could anticipate. Implications for anyone building on typed evaluation models are discussed, and concrete open questions for future work are identified.
+Chat-based LLMs return free text that must be interpreted; a category of tools that emerged in September 2026, *typed evaluation models* ("System One models"), instead return a typed object directly usable by software. Jev (TypeSafe AI, reported by the vendor as launched on September 15, 2026) is the first commercial example of this category. This work situates it within a five-category landscape of AI model interaction and tests, with a minimal experiment, a prediction derived from annotated decision theory: that an output collapsed to a single calibrated probability cannot distinguish *genuine conflict* from *genuine ignorance*. For Jev's simplest question type (`boolean`/Noul), the experiment is consistent with that prediction: conflict cases (probability 0.50–0.57) and ignorance cases (0.46–0.48) fall within the same narrow band, indistinguishable without further context. But a second experiment, using the same model's `Choice` type with a schema that explicitly names "conflicting evidence" and "insufficient evidence" as options, separates both cases with probability 1.0 in all four completed cases. A third experiment, with `Choice` restricted to the two original options (`red`/`green`, no escape categories), reproduces neither the ~0.5 collapse of the first experiment nor the clean separation of the second: a directional bias toward "red" appears (0.67–0.85 depending on the case) that correlates with the lexical presence of the word "red" in the state, not cleanly with the TORN/SILENT category. The central finding, therefore, is not that Jev collapses per se, but that **the same model preserves, destroys, or unpredictably distorts the distinction depending on the question type and the declared schema** — an interface design risk more complex than a single follow-up experiment could anticipate. A fourth, exploratory experiment, using the `Score` type (an ordinal scalar over a rubric, distinct from `boolean` and `Choice`), refines this further: it clearly separates severe conflict from total absence of evidence (2.04 vs. 3.95 on a five-level scale), though it fails to reliably order intermediate degrees. Implications for anyone building on typed evaluation models are discussed, and concrete open questions for future work are identified.
 
 **Keywords:** typed evaluation models; System One models; LLM-as-judge; annotated paraconsistent logic; representational collapse; typed abstention; Jev.
 
@@ -70,7 +70,9 @@ Six states (`state`) were designed in English on the same domain fact (whether a
 
 **Experiment 3 (binary `Choice`, closing the open question):** the same six states, the same `lightState` question of type `choice`, but with **only** the two original options: `red` and `green`, no escape categories. Tests whether the perfect separation of Experiment 2 depends on the schema being *able* to name conflict/insufficiency, or whether it is a general property of the `Choice` type independent of the schema. Also data-motivated, not preregistered.
 
-None of the three experiments averages repetitions (a single call per case; limitation in §8). The calls were made on September 19, 2026 against the production model, with no access to its weights or training set.
+**Experiment 4 (`Score` type, exploratory):** a fourth experiment, not preregistered and motivated by the prior results, tests whether a purely scalar but *ordinal* question type — `Score`, which returns a probability-weighted mean over a rubric of ordered levels, not a categorical choice — also preserves the distinction between conflict and absence of evidence, or collapses like the `boolean` type. The `Score` syntax is not explicitly documented in the public specification consulted; it was determined by trial and error against the SDK's validation messages, which require an ordered array of levels (`criteria`), not a map as in `Choice`. A five-level rubric on "evidential determinacy" was used (0 = very high confidence, 4 = no confidence at all), deliberately agnostic about the *cause* of the uncertainty (it does not mention conflict or absence), and six new states were constructed — three of nominally increasing conflict intensity and three of nominally increasing evidence-absence intensity — plus reusing AGREE-SUPPORT as an already-determined control anchor. The six new states are in Appendix A.
+
+None of the four experiments averages repetitions (a single call per case; limitation in §8). The calls were made on September 19, 2026 against the production model, with no access to its weights or training set.
 
 ## 6. Results
 
@@ -113,6 +115,22 @@ With the `Choice` type and a schema that explicitly names "conflicting evidence"
 
 Without escape categories, Jev **does not** reproduce the ~0.5 collapse of Experiment 1 nor the perfect separation of Experiment 2. Instead, a directional bias toward `red` appears in TORN and SILENT (0.67–0.85), more pronounced in TORN (0.84–0.85) than in SILENT (0.67–0.77) — a weak ordinal trend (n=2 per category) that does not allow a firm conclusion. The refutation control (AGREE-REFUTE), with unambiguous `green` evidence, does **not** follow that bias: it is classified cleanly and correctly (P(red)=0.00), just as sharply as the support control in the opposite direction. The bias toward `red` is therefore not an indiscriminate model artifact — it appears only in cases with ambiguous (TORN) or absent (SILENT) evidence, not in cases with clear evidence in either direction. It is a third pattern, unanticipated by either of the two simple hypotheses (symmetric collapse or clean separation).
 
+**Experiment 4 — `Score` type (graded determinacy):**
+
+| Case | Branch | Score (0–4) |
+|---|---|---|
+| ANCHOR-DETERMINED | control (sources agree) | 0.25 |
+| CONFLICT-MODERATE | conflict, unequal witness vantage | 1.58 |
+| CONFLICT-SEVERE | conflict, maximally reliable sensors | 2.04 |
+| CONFLICT-MILD | conflict, self-doubting witnesses | 2.67 |
+| SILENCE-MODERATE | absence, vague unreliable rumor | 3.66 |
+| SILENCE-MILD | absence, evidence irrelevant to the fact | 3.88 |
+| SILENCE-SEVERE | total absence of evidence | 3.95 |
+
+The clean contrast is at the extremes: CONFLICT-SEVERE (2.04, "moderate," with 0.97 probability concentrated on that level) and SILENCE-SEVERE (3.95, "no confidence," 0.97 probability on that level) are separated by nearly two points on a five-level scale — the `Score` type, although it also returns a scalar, does **not** collapse severe conflict and total absence to the same value, unlike the `boolean` type (Experiment 1). The control anchor (AGREE-SUPPORT) confirms that the maximum-determinacy extreme works as expected (0.25, near "very high confidence").
+
+The three intermediate points in each branch, however, do **not** order monotonically as intended by design: within conflict, CONFLICT-MODERATE (1.58) turns out *more* determinate than CONFLICT-SEVERE (2.04) and CONFLICT-MILD (2.67), reversing the intended severity order; within absence, SILENCE-MODERATE (3.66) turns out *less* indeterminate than SILENCE-MILD (3.88). On review, CONFLICT-MODERATE has an unintentional design asymmetry (one witness with a "reasonably clear view" versus one with a "partially obstructed view") that likely introduces a differential-credibility cue absent from the other two cases in that branch — that is, the "degree" manipulation was not well controlled, and the result does not support a claim that `Score` finely orders the degree of indeterminacy within a branch. These six intermediate cases are reported for transparency (Appendix C), but are **not** interpreted as evidence of monotonic tracking of degree.
+
 ## 7. Discussion
 
 The pattern in Experiment 1 is consistent with the prediction in §4: under the Noul type, Jev does not distinguish *why* the evidence is unclear. But Experiment 2 forces a correction of the interpretation: **the loss is not a property of the Jev model, but of the question type and schema declared to query it.** The `boolean` type forces, by definition, an output in a one-degree-of-freedom space — there is no way for it to return "conflict" or "insufficiency" even if the model internally distinguishes them. The `Choice` type, when the schema includes those categories as named options, does have representational room to express them, and the model exploits it with a sharpness that was not anticipated (probability 1.0, not a diffuse tendency).
@@ -127,13 +145,15 @@ The AGREE-REFUTE case, completed in a follow-up call after resolving the rate li
 
 What does hold up across the three experiments together: the deductive argument in §4 (no single scalar can be injective over a higher-dimensional evidence space) explains the collapse of the Noul type, but **does not predict or explain** the pattern of Experiment 3 — a `Choice` with two options is not a single injective scalar in the same way, and yet it failed to achieve the separation that its representational space (two degrees of freedom, with probabilities summing to 1) would in principle allow. The cause there is more likely a model or stimulus-design artifact than a necessary representational limitation. The practical recommendation stands, but becomes more cautious: to preserve the distinction between conflict and ignorance, avoiding the `boolean` type is not enough — the `Choice` schema must also explicitly name those states as first-class options, and it is worth empirically verifying that the model is not responding to superficial lexical cues in the state rather than to the actual structure of the evidence.
 
+Experiment 4 adds a nuance to this explanation: the `Score` type also returns a scalar (a probability-weighted mean over ordered levels), and yet it clearly separates severe conflict from total absence of evidence (2.04 vs. 3.95). This suggests that the relevant variable is not scalar-vs-categorical, but **what question the schema forces**: the `boolean` type forces an answer about the first-order fact ("is it red?"), where conflict and absence are, by the argument in §4, indistinguishable in principle; the `Score` type, as used here, was declared over a second-order question ("how determinate is the evidence?"), which can, in principle, differentiate *how much* information there is from *what* that information says. The limitation is that this experiment did not manage (§6) to show that `Score` reliably orders intermediate degrees of indeterminacy, so the conclusion is limited to the extremes contrast, not a fine-grained scale.
+
 ## 8. Limitations
 
-(a) [RESOLVED 2026-09-19] The AGREE-REFUTE control initially failed due to the Vercel AI Gateway free tier's rate limit **in all three experiments**, even with a payment method already on file — the provider requires loaded paid credits, not just a card on file. That step was completed the same day (a $20 credit purchase), and the case was run in an independent follow-up call (same state, same three question schemas); all three experiments now have **n=6/6 complete cases**. The resulting values (§6–§7) are consistent with each experiment's pattern; (b) a single call per case in each experiment, with no repetition to estimate variance — critical for Experiment 3, whose pattern (n=2 per category in TORN/SILENT) does not allow distinguishing a real trend from sample noise; (c) Experiments 2 and 3 were motivated by prior results and were not preregistered — explicitly declared as such; (d) the lexical-bias explanation for Experiment 3 (§7) is plausible and received additional support from the AGREE-REFUTE case, but was not tested in a controlled way (this would require reversing the order in which options are mentioned in the text, or SILENT states that mention both words); (e) this is a four-day-old product at the time of writing — its behavior, documentation, and rate limits may change without notice, and these results should be read as a snapshot of 2026-09-19, not a stable characterization; (f) the speed, cost, and training-method (RLCD) figures are vendor claims, not independently audited in this work; (g) the five-category taxonomy in §2 is the author's own synthesis, not a systematic review.
+(a) [RESOLVED 2026-09-19] The AGREE-REFUTE control initially failed due to the Vercel AI Gateway free tier's rate limit **in all three experiments**, even with a payment method already on file — the provider requires loaded paid credits, not just a card on file. That step was completed the same day (a $20 credit purchase), and the case was run in an independent follow-up call (same state, same three question schemas); all three experiments now have **n=6/6 complete cases**. The resulting values (§6–§7) are consistent with each experiment's pattern; (b) a single call per case in each experiment, with no repetition to estimate variance — critical for Experiment 3, whose pattern (n=2 per category in TORN/SILENT) does not allow distinguishing a real trend from sample noise; (c) Experiments 2 and 3 were motivated by prior results and were not preregistered — explicitly declared as such; (d) the lexical-bias explanation for Experiment 3 (§7) is plausible and received additional support from the AGREE-REFUTE case, but was not tested in a controlled way (this would require reversing the order in which options are mentioned in the text, or SILENT states that mention both words); (e) this is a four-day-old product at the time of writing — its behavior, documentation, and rate limits may change without notice, and these results should be read as a snapshot of 2026-09-19, not a stable characterization; (f) the speed, cost, and training-method (RLCD) figures are vendor claims, not independently audited in this work; (g) the five-category taxonomy in §2 is the author's own synthesis, not a systematic review; (h) Experiment 4 (`Score` type, exploratory, not preregistered) shares limitations (b)-(c) above (a single call per case, no repetition, data-motivated), and in addition the intermediate-degree contrast within each branch turned out non-monotonic, with at least one identified design confound (vantage asymmetry in CONFLICT-MODERATE, §6); only the extremes contrast (severe conflict vs. severe absence) is reported as a finding, not a fine-grained degree scale.
 
 ## 9. Conclusion
 
-The first experiment in this work seemed to confirm that typed evaluation models inherit, by representational design, the collapse between conflict and ignorance already formally characterized in annotated decision theory. A second experiment showed that conclusion to be incomplete: the same model, with a `Choice` schema that explicitly names the disputed epistemic states, separates conflict from ignorance with maximum probability. A third experiment, designed to isolate whether that separation depended on the schema or on the question type, showed that reality is messier than either of those two stories: without escape categories, Jev neither collapses symmetrically nor separates cleanly, but instead exhibits an unanticipated directional bias, possibly tied to superficial lexical cues in the input text.
+The first experiment in this work seemed to confirm that typed evaluation models inherit, by representational design, the collapse between conflict and ignorance already formally characterized in annotated decision theory. A second experiment showed that conclusion to be incomplete: the same model, with a `Choice` schema that explicitly names the disputed epistemic states, separates conflict from ignorance with maximum probability. A third experiment, designed to isolate whether that separation depended on the schema or on the question type, showed that reality is messier than either of those two stories: without escape categories, Jev neither collapses symmetrically nor separates cleanly, but instead exhibits an unanticipated directional bias, possibly tied to superficial lexical cues in the input text. A fourth, exploratory experiment, with the `Score` type, suggests that the relevant variable is not scalar-vs-categorical but what question each type forces — a scalar over "how determinate is the evidence" does separate severe conflict from total absence, though it did not manage to establish a fine-grained scale of intermediate degrees.
 
 The lesson that survives all three experiments is not about a fixed limit of Jev as a product, but about two distinct and equally real risks for anyone building on typed evaluation models: first, reducing an epistemically complex decision to the simplest available interface type (`boolean`/Noul) discards information by construction; second, even a more expressive interface (`Choice`) can fail in non-obvious ways — biased, not simply "less informative" — when the schema does not explicitly name the states that matter. No new architecture or theoretical extension is strictly necessary for the first risk; the second demands, at minimum, case-by-case empirical validation before trusting that a richer type solves the problem on its own.
 
@@ -171,7 +191,7 @@ The lesson that survives all three experiments is not about a fixed limit of Jev
 
 [14] Gu, J., Jiang, X., Shi, Z., Tian, H., Zhai, X., Xu, C., et al. (2026). *A survey on LLM-as-a-judge*. **The Innovation**, 7(6), 101253. https://www.sciencedirect.com/science/article/pii/S2666675825004564
 
-**Data and code:** public repository — https://github.com/mleyvaz/jev-typed-evaluation-collapse — with `run_experiment.mjs` + `results.json` (Experiment 1), `run_experiment_choice.mjs` + `results_choice.json` (Experiment 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experiment 3), `run_missing_refute.mjs` (follow-up call that completed the AGREE-REFUTE case across all three schemas after resolving the rate limit), and `make_fig1_taxonomy.py` (Figure 1). Reproducible with the reader's own AI Gateway key.
+**Data and code:** public repository — https://github.com/mleyvaz/jev-typed-evaluation-collapse — with `run_experiment.mjs` + `results.json` (Experiment 1), `run_experiment_choice.mjs` + `results_choice.json` (Experiment 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experiment 3), `run_missing_refute.mjs` (follow-up call that completed the AGREE-REFUTE case across all three schemas after resolving the rate limit), `run_experiment_graded_score.mjs` + `results_graded_score.json` (Experiment 4), and `make_fig1_taxonomy.py` (Figure 1). Reproducible with the reader's own AI Gateway key.
 
 ---
 
@@ -196,6 +216,26 @@ The six states (`state`) used across the three experiments, identical in each �
 
 **AGREE-REFUTE** (control, refutation):
 > Witness A testified that the traffic light was green, not red, at the time of the collision. Witness B, standing nearby with an independent line of sight, separately and independently confirmed that the light was green at that same moment.
+
+The six new states for Experiment 4 (the seventh case, ANCHOR-DETERMINED, reuses the AGREE-SUPPORT text):
+
+**CONFLICT-MILD** (conflict, mild):
+> Witness A said the traffic light "might have been red, but I couldn't say for sure — it happened so fast." Witness B said it "could have been green, though I only caught a glimpse." Neither witness is confident in their own account, and both readily admit they might be wrong.
+
+**CONFLICT-MODERATE** (conflict, moderate):
+> Witness A, who had a reasonably clear view of the intersection, said the traffic light was red at the moment of the collision. Witness B, who was standing some distance away with a partially obstructed view, said the same traffic light was green at that moment. Both witnesses seem generally credible, though neither had an ideal vantage point.
+
+**CONFLICT-SEVERE** (conflict, severe):
+> Sensor 1, a newly calibrated, redundant-triple-checked traffic sensor with a documented error rate of less than 0.001%, recorded the light as RED at 14:03:02.000, with full internal diagnostics confirming normal operation. Sensor 2, an independent sensor of the same specification mounted on the same pole and calibrated the same day, recorded the light as GREEN at the exact same timestamp, 14:03:02.000, with full internal diagnostics confirming normal operation. Both sensors are considered maximally reliable; there is no known explanation for the disagreement.
+
+**SILENCE-MILD** (absence, mild):
+> A passing dashcam recorded a few frames of the intersection, but the traffic light itself is out of frame in all of them; only the road surface and nearby cars are visible. No other recording or testimony covers the moment in question.
+
+**SILENCE-MODERATE** (absence, moderate):
+> A pedestrian who was not looking at the light mentioned, in an offhand and unprompted remark days later, that they "vaguely recall something about the light," but could not say what color when pressed, or whether they were even looking at the right intersection. No other information exists.
+
+**SILENCE-SEVERE** (absence, severe):
+> No witnesses were present at the intersection at the time in question. No traffic cameras were operating in that area that day. There is no record, sensor log, or testimony of any kind describing the state of the traffic light at that moment.
 
 ## Appendix B. Call Code, per Experiment
 
@@ -253,6 +293,27 @@ const result = await evaluate({
 });
 ```
 
+**Experiment 4 (`Score`, graded determinacy):**
+```js
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT,
+  questions: {
+    determinacy: {
+      type: 'score',
+      instructions: 'How determinate (certain) is the available evidence about the color of the traffic light, regardless of which color it points to?',
+      criteria: [
+        'Very high confidence: the evidence clearly and unambiguously points to one color.',
+        'High confidence: the evidence leans clearly to one color, with minor uncertainty.',
+        'Moderate: there is no reliable basis to favor one color over the other.',
+        'Low confidence: there is almost no basis to judge the color.',
+        'No confidence: there is no basis whatsoever to judge the color.',
+      ], // ordered array, not a map — unlike `criteria` in Choice
+    },
+  },
+});
+```
+
 ## Appendix C. Full Response (`answers`) per Case
 
 The `answers` object returned by Jev for each completed case, unedited (the full response object also includes `usage`, `warnings`, `rounding`, and `providerMetadata`, available in the `results*.json` files in the repository).
@@ -291,4 +352,29 @@ SILENT-1:       {"lightState":{"type":"choice","choice":"red","probabilities":{"
 SILENT-2:       {"lightState":{"type":"choice","choice":"red","probabilities":{"red":0.77,"green":0.23}}}
 AGREE-SUPPORT:  {"lightState":{"type":"choice","choice":"red","probabilities":{"red":1,"green":0}}}
 AGREE-REFUTE:   {"lightState":{"type":"choice","choice":"green","probabilities":{"red":0,"green":1}}}
+```
+
+**Experiment 4 — `Score` (graded determinacy):**
+```json
+ANCHOR-DETERMINED:
+  {"determinacy":{"type":"score","score":0.25,
+    "probabilities":{"0":0.75,"1":0.25,"2":0,"3":0,"4":0}}}
+CONFLICT-MILD:
+  {"determinacy":{"type":"score","score":2.67,
+    "probabilities":{"0":0,"1":0,"2":0.36,"3":0.62,"4":0.02}}}
+CONFLICT-MODERATE:
+  {"determinacy":{"type":"score","score":1.58,
+    "probabilities":{"0":0,"1":0.43,"2":0.56,"3":0.01,"4":0}}}
+CONFLICT-SEVERE:
+  {"determinacy":{"type":"score","score":2.04,
+    "probabilities":{"0":0,"1":0,"2":0.97,"3":0.02,"4":0.01}}}
+SILENCE-MILD:
+  {"determinacy":{"type":"score","score":3.88,
+    "probabilities":{"0":0,"1":0,"2":0.03,"3":0.07,"4":0.90}}}
+SILENCE-MODERATE:
+  {"determinacy":{"type":"score","score":3.66,
+    "probabilities":{"0":0,"1":0,"2":0.02,"3":0.30,"4":0.68}}}
+SILENCE-SEVERE:
+  {"determinacy":{"type":"score","score":3.95,
+    "probabilities":{"0":0,"1":0,"2":0.02,"3":0.01,"4":0.97}}}
 ```

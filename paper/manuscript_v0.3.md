@@ -4,13 +4,13 @@
 
 ¹ Universidad Bernardo O'Higgins (UBO), Santiago, Chile. ² Universidad Bolivariana del Ecuador (UBE), Guayaquil, Ecuador. ³ Universidad de Guayaquil, Guayaquil, Ecuador.
 
-*Borrador v0.3 — destino: NCML. Nota de campo, no línea Q1 propia. Revisión aplicada tras ronda adversarial de 5 modelos y dos experimentos de seguimiento (Choice enriquecido, Choice binario). Actualización 19-sep-2026: caso AGREE-REFUTE completado en los tres experimentos tras resolver el límite de tasa (§8).*
+*Borrador v0.3 — destino: NCML. Nota de campo, no línea Q1 propia. Revisión aplicada tras ronda adversarial de 5 modelos y dos experimentos de seguimiento (Choice enriquecido, Choice binario). Actualización 19-sep-2026: caso AGREE-REFUTE completado en los tres experimentos tras resolver el límite de tasa (§8); añadido Experimento 4 exploratorio (tipo Score, determinación graduada).*
 
 ---
 
 ## Resumen
 
-Los modelos de chat basados en LLM devuelven texto libre que debe interpretarse; una categoría de herramientas que emergió en septiembre de 2026, los *modelos de evaluación tipada* ("System One models"), devuelven en su lugar un objeto tipado directamente utilizable por software. Jev (TypeSafe AI, reportado por el fabricante como lanzado el 15 de septiembre de 2026) es el primer ejemplo comercial de esta categoría. Este trabajo lo ubica dentro de un panorama de cinco categorías de interacción con modelos de IA y examina, con un experimento mínimo, una predicción derivada de la teoría de decisión anotada: que una salida colapsada a una sola probabilidad calibrada no puede distinguir *conflicto genuino* de *ignorancia genuina*. Para el tipo de pregunta más simple de Jev (`boolean`/Noul), el experimento es consistente con esa predicción: los casos de conflicto (probabilidad 0,50–0,57) y de ignorancia (0,46–0,48) caen en la misma banda estrecha, indistinguibles sin más contexto. Pero un segundo experimento, con el tipo `Choice` del mismo modelo y un esquema que nombra explícitamente "evidencia en conflicto" y "evidencia insuficiente" como opciones, separa ambos casos con probabilidad 1,0 en los cuatro casos completados. Un tercer experimento, con `Choice` restringido a las dos opciones originales (`red`/`green`, sin categorías de escape), no reproduce ni el colapso a ~0,5 del primer experimento ni la separación perfecta del segundo: aparece un sesgo direccional hacia "red" (0,67–0,85 según el caso) que correlaciona con la presencia léxica de la palabra "red" en el estado, no de forma limpia con la categoría TORN/SILENT. El hallazgo central, por tanto, no es que Jev colapse per se, sino que **el mismo modelo preserva, destruye, o distorsiona de forma no anticipada la distinción según el tipo de pregunta y el esquema que se le declare** — un riesgo de diseño de interfaz más complejo de lo que un solo experimento de seguimiento podía anticipar. Se discuten las implicaciones para quien construya sobre modelos de evaluación tipada, y se identifican preguntas abiertas concretas para trabajo futuro.
+Los modelos de chat basados en LLM devuelven texto libre que debe interpretarse; una categoría de herramientas que emergió en septiembre de 2026, los *modelos de evaluación tipada* ("System One models"), devuelven en su lugar un objeto tipado directamente utilizable por software. Jev (TypeSafe AI, reportado por el fabricante como lanzado el 15 de septiembre de 2026) es el primer ejemplo comercial de esta categoría. Este trabajo lo ubica dentro de un panorama de cinco categorías de interacción con modelos de IA y examina, con un experimento mínimo, una predicción derivada de la teoría de decisión anotada: que una salida colapsada a una sola probabilidad calibrada no puede distinguir *conflicto genuino* de *ignorancia genuina*. Para el tipo de pregunta más simple de Jev (`boolean`/Noul), el experimento es consistente con esa predicción: los casos de conflicto (probabilidad 0,50–0,57) y de ignorancia (0,46–0,48) caen en la misma banda estrecha, indistinguibles sin más contexto. Pero un segundo experimento, con el tipo `Choice` del mismo modelo y un esquema que nombra explícitamente "evidencia en conflicto" y "evidencia insuficiente" como opciones, separa ambos casos con probabilidad 1,0 en los cuatro casos completados. Un tercer experimento, con `Choice` restringido a las dos opciones originales (`red`/`green`, sin categorías de escape), no reproduce ni el colapso a ~0,5 del primer experimento ni la separación perfecta del segundo: aparece un sesgo direccional hacia "red" (0,67–0,85 según el caso) que correlaciona con la presencia léxica de la palabra "red" en el estado, no de forma limpia con la categoría TORN/SILENT. El hallazgo central, por tanto, no es que Jev colapse per se, sino que **el mismo modelo preserva, destruye, o distorsiona de forma no anticipada la distinción según el tipo de pregunta y el esquema que se le declare** — un riesgo de diseño de interfaz más complejo de lo que un solo experimento de seguimiento podía anticipar. Un cuarto experimento exploratorio, con el tipo `Score` (un escalar ordinal sobre una rúbrica, distinto de `boolean` y de `Choice`), refina esto aún más: separa con claridad conflicto severo de ausencia total de evidencia (2,04 vs. 3,95 en una escala de cinco niveles), aunque no logra ordenar de forma confiable grados intermedios. Se discuten las implicaciones para quien construya sobre modelos de evaluación tipada, y se identifican preguntas abiertas concretas para trabajo futuro.
 
 **Palabras clave:** modelos de evaluación tipada; System One models; LLM-as-judge; lógica paraconsistente anotada; colapso representacional; abstención tipada; Jev.
 
@@ -70,7 +70,9 @@ Se diseñaron seis estados (`state`) en inglés sobre el mismo hecho de dominio 
 
 **Experimento 3 (`Choice` binario, cierre de la pregunta abierta):** los mismos seis estados, la misma pregunta `lightState` de tipo `choice`, pero con **solo** las dos opciones originales: `red` y `green`, sin categorías de escape. Prueba si la separación perfecta del Experimento 2 depende de que el esquema *pueda* nombrar conflicto/insuficiencia, o si es una propiedad general del tipo `Choice` independiente del esquema. También motivado por los datos, no preregistrado.
 
-Ninguno de los tres experimentos promedia repeticiones (una sola llamada por caso; limitación en §8). Las llamadas se hicieron el 19 de septiembre de 2026 contra el modelo en producción, sin acceso a sus pesos ni a su conjunto de entrenamiento.
+**Experimento 4 (tipo `Score`, exploratorio):** un cuarto experimento, no preregistrado y motivado por los resultados anteriores, prueba si un tipo de pregunta puramente escalar pero *ordinal* —`Score`, que devuelve una media ponderada sobre una rúbrica de niveles ordenados, no una elección categórica— también preserva la distinción entre conflicto y ausencia de evidencia, o si colapsa como el tipo `boolean`. La sintaxis de `Score` no está documentada explícitamente en la especificación pública consultada; se determinó por prueba y error contra los mensajes de validación del SDK, que exige un array ordenado de niveles (`criteria`), no un mapa como en `Choice`. Se usó una rúbrica de cinco niveles sobre "determinación de la evidencia" (0 = certeza muy alta, 4 = sin certeza alguna), deliberadamente agnóstica sobre la *causa* de la incertidumbre (no menciona conflicto ni ausencia), y se construyeron seis estados nuevos —tres de conflicto de intensidad nominalmente creciente y tres de ausencia de evidencia de intensidad nominalmente creciente—, además de reutilizar AGREE-SUPPORT como ancla de control ya determinado. Los seis estados nuevos están en el Anexo A.
+
+Ninguno de los cuatro experimentos promedia repeticiones (una sola llamada por caso; limitación en §8). Las llamadas se hicieron el 19 de septiembre de 2026 contra el modelo en producción, sin acceso a sus pesos ni a su conjunto de entrenamiento.
 
 ## 6. Resultados
 
@@ -113,6 +115,22 @@ Con el tipo `Choice` y un esquema que nombra explícitamente "evidencia en confl
 
 Sin categorías de escape, Jev **no** reproduce el colapso a ~0,5 del Experimento 1 ni la separación perfecta del Experimento 2. Aparece, en cambio, un sesgo direccional hacia `red` en TORN y SILENT (0,67–0,85), más marcado en TORN (0,84–0,85) que en SILENT (0,67–0,77) — una tendencia ordinal débil (n=2 por categoría) que no permite una conclusión firme. El control de refutación (AGREE-REFUTE), con evidencia inequívoca de `green`, **no** sigue ese sesgo: se clasifica de forma limpia y correcta (P(red)=0,00), igual de nítido que el control de apoyo en la dirección opuesta. El sesgo hacia `red`, por tanto, no es un artefacto indiscriminado del modelo — aparece únicamente en los casos con evidencia ambigua (TORN) o ausente (SILENT), no en los casos con evidencia clara en cualquier dirección. Es un tercer patrón, no anticipado por ninguna de las dos hipótesis simples (colapso simétrico o separación limpia).
 
+**Experimento 4 — tipo `Score` (determinación graduada):**
+
+| Caso | Rama | Score (0–4) |
+|---|---|---|
+| ANCHOR-DETERMINED | control (fuentes de acuerdo) | 0,25 |
+| CONFLICT-MODERATE | conflicto, testigos con vantage desigual | 1,58 |
+| CONFLICT-SEVERE | conflicto, sensores máximamente confiables | 2,04 |
+| CONFLICT-MILD | conflicto, testigos que dudan de sí mismos | 2,67 |
+| SILENCE-MODERATE | ausencia, rumor vago no confiable | 3,66 |
+| SILENCE-MILD | ausencia, evidencia irrelevante al hecho | 3,88 |
+| SILENCE-SEVERE | ausencia total de evidencia | 3,95 |
+
+El contraste limpio está en los extremos: CONFLICT-SEVERE (2,04, "moderado", con 0,97 de probabilidad concentrada en ese nivel) y SILENCE-SEVERE (3,95, "sin certeza", 0,97 de probabilidad en ese nivel) quedan separados por casi dos puntos en una escala de cinco niveles — el tipo `Score`, aunque también devuelve un escalar, **no** colapsa conflicto severo y ausencia total al mismo valor, a diferencia del tipo `boolean` (Experimento 1). El ancla de control (AGREE-SUPPORT) confirma que el extremo de máxima determinación funciona como se espera (0,25, cerca de "certeza muy alta").
+
+Los tres puntos intermedios de cada rama, sin embargo, **no** ordenan de forma monótona como se pretendía al diseñarlos: dentro del conflicto, CONFLICT-MODERATE (1,58) resulta *más* determinado que CONFLICT-SEVERE (2,04) y CONFLICT-MILD (2,67), invirtiendo el orden de severidad nominal previsto; dentro de la ausencia, SILENCE-MODERATE (3,66) resulta *menos* indeterminado que SILENCE-MILD (3,88). Al revisar los estados, CONFLICT-MODERATE tiene una asimetría de diseño no intencional (un testigo con "vista razonablemente clara" contra otro con "vista parcialmente obstruida") que probablemente introduce una pista de credibilidad diferencial ausente en los otros dos casos de esa rama — es decir, la manipulación de "grado" no quedó controlada, y el resultado no permite afirmar que `Score` ordene *finamente* el grado de indeterminación dentro de una rama. Estos seis casos intermedios se reportan por transparencia (Anexo C), pero **no** se interpretan como evidencia de un *tracking* monótono del grado.
+
 ## 7. Discusión
 
 El patrón del Experimento 1 es consistente con la predicción de la §4: bajo el tipo Noul, Jev no distingue *por qué* la evidencia no es clara. Pero el Experimento 2 obliga a corregir la interpretación: **la pérdida no es una propiedad del modelo Jev, sino del tipo de pregunta y del esquema declarados para consultarlo.** El tipo `boolean` fuerza, por definición, una salida en un espacio de un solo grado de libertad — no hay forma de que devuelva "conflicto" o "insuficiencia" aunque internamente el modelo los distinga. El tipo `Choice`, cuando el esquema incluye esas categorías como opciones nombradas, sí tiene espacio representacional para expresarlas, y el modelo lo aprovecha con una nitidez que no se anticipaba (probabilidad 1,0, no una tendencia difusa).
@@ -127,13 +145,15 @@ El caso AGREE-REFUTE, completado en una llamada de seguimiento tras resolver el 
 
 Lo que sí se sostiene con los tres experimentos juntos: el argumento deductivo de la §4 (ningún escalar único puede ser inyectivo sobre un espacio de evidencia de mayor dimensión) explica el colapso del tipo Noul, pero **no predice ni explica** el patrón del Experimento 3 — un `Choice` con dos opciones no es un escalar único inyectivo de la misma manera, y aun así no logró la separación que su espacio representacional (dos grados de libertad, con probabilidades que suman 1) permitiría en principio. La causa ahí es más probablemente un artefacto del modelo o del diseño del estímulo que una limitación representacional necesaria. La recomendación práctica se mantiene, pero se vuelve más cautelosa: para preservar la distinción entre conflicto e ignorancia, no basta con evitar el tipo `boolean` — hace falta, además, que el esquema de `Choice` nombre esos estados explícitamente como opciones de primera clase, y conviene verificar empíricamente que el modelo no esté respondiendo a pistas léxicas superficiales del estado en vez de a la estructura real de la evidencia.
 
+El Experimento 4 añade un matiz a esta explicación: el tipo `Score` también devuelve un escalar (una media ponderada sobre niveles ordenados), y sin embargo separa con claridad el conflicto severo de la ausencia total de evidencia (2,04 vs. 3,95). Esto sugiere que la variable que importa no es escalar-vs-categórico, sino **qué pregunta fuerza el esquema**: el tipo `boolean` fuerza una respuesta sobre el hecho de primer orden ("¿es rojo?"), donde conflicto y ausencia son, por el argumento de la §4, indistinguibles en principio; el tipo `Score`, en este uso, se declaró sobre una pregunta de segundo orden ("¿cuán determinada está la evidencia?"), que sí puede, en principio, diferenciar *cuánta* información hay de *qué* dice esa información. La limitación es que este experimento no logró (§6) demostrar que `Score` ordene grados intermedios de indeterminación de forma confiable, así que la conclusión se limita al contraste de extremos, no a una escala fina.
+
 ## 8. Limitaciones
 
-(a) [RESUELTO 19-sep-2026] El control AGREE-REFUTE falló inicialmente por límite de tasa del nivel gratuito de Vercel AI Gateway **en los tres experimentos**, incluso con un método de pago ya registrado — el proveedor exige créditos de pago cargados, no solo una tarjeta en archivo. Ese paso se completó el mismo día (compra de $20 de crédito), y el caso se corrió en una llamada de seguimiento independiente (mismo estado, mismos tres esquemas de pregunta); los tres experimentos tienen ahora **n=6/6 casos completos**. Los valores resultantes (§6-§7) son consistentes con el patrón de cada experimento; (b) una sola llamada por caso en cada experimento, sin repetición para estimar varianza — crítico para el Experimento 3, cuyo patrón (n=2 por categoría en TORN/SILENT) no permite distinguir tendencia real de ruido de muestra; (c) los Experimentos 2 y 3 fueron motivados por resultados previos y no estaban preregistrados — se declara así explícitamente; (d) la explicación del sesgo léxico en el Experimento 3 (§7) es plausible y recibió apoyo adicional del caso AGREE-REFUTE, pero no se probó de forma controlada (requeriría invertir el orden de mención de las opciones en el texto, o estados SILENT que mencionen ambas palabras); (e) es un producto de cuatro días de antigüedad al momento de escribir esto — su comportamiento y límites pueden cambiar sin aviso, y estos resultados son una fotografía del 19-sep-2026; (f) las cifras de velocidad, costo y método de entrenamiento (RLCD) son afirmaciones del fabricante, no auditadas de forma independiente en este trabajo; (g) la taxonomía de cinco categorías de la §2 es síntesis propia, no revisión sistemática.
+(a) [RESUELTO 19-sep-2026] El control AGREE-REFUTE falló inicialmente por límite de tasa del nivel gratuito de Vercel AI Gateway **en los tres experimentos**, incluso con un método de pago ya registrado — el proveedor exige créditos de pago cargados, no solo una tarjeta en archivo. Ese paso se completó el mismo día (compra de $20 de crédito), y el caso se corrió en una llamada de seguimiento independiente (mismo estado, mismos tres esquemas de pregunta); los tres experimentos tienen ahora **n=6/6 casos completos**. Los valores resultantes (§6-§7) son consistentes con el patrón de cada experimento; (b) una sola llamada por caso en cada experimento, sin repetición para estimar varianza — crítico para el Experimento 3, cuyo patrón (n=2 por categoría en TORN/SILENT) no permite distinguir tendencia real de ruido de muestra; (c) los Experimentos 2 y 3 fueron motivados por resultados previos y no estaban preregistrados — se declara así explícitamente; (d) la explicación del sesgo léxico en el Experimento 3 (§7) es plausible y recibió apoyo adicional del caso AGREE-REFUTE, pero no se probó de forma controlada (requeriría invertir el orden de mención de las opciones en el texto, o estados SILENT que mencionen ambas palabras); (e) es un producto de cuatro días de antigüedad al momento de escribir esto — su comportamiento y límites pueden cambiar sin aviso, y estos resultados son una fotografía del 19-sep-2026; (f) las cifras de velocidad, costo y método de entrenamiento (RLCD) son afirmaciones del fabricante, no auditadas de forma independiente en este trabajo; (g) la taxonomía de cinco categorías de la §2 es síntesis propia, no revisión sistemática; (h) el Experimento 4 (tipo `Score`, exploratorio, no preregistrado) comparte las limitaciones (b)-(c) anteriores (una sola llamada por caso, sin repetición, motivado por los datos), y además el contraste de grados intermedios dentro de cada rama resultó no monótono, con al menos un confusor de diseño identificado (asimetría de vantage en CONFLICT-MODERATE, §6); solo el contraste entre los extremos (conflicto severo vs. ausencia severa) se reporta como hallazgo, no una escala fina de grados.
 
 ## 9. Conclusión
 
-El primer experimento de este trabajo pareció confirmar que los modelos de evaluación tipada heredan, por diseño representacional, el colapso entre conflicto e ignorancia ya caracterizado en la teoría de decisión anotada. Un segundo experimento mostró que esa conclusión era incompleta: el mismo modelo, con un esquema `Choice` que nombra explícitamente los estados epistémicos en disputa, separa conflicto de ignorancia con probabilidad máxima. Un tercer experimento, diseñado para aislar si esa separación dependía del esquema o del tipo de pregunta, mostró que la realidad es más desordenada que cualquiera de esas dos historias: sin categorías de escape, Jev no colapsa simétricamente ni separa limpiamente, sino que exhibe un sesgo direccional no anticipado, posiblemente ligado a pistas léxicas superficiales del texto de entrada más que a la estructura real de la evidencia.
+El primer experimento de este trabajo pareció confirmar que los modelos de evaluación tipada heredan, por diseño representacional, el colapso entre conflicto e ignorancia ya caracterizado en la teoría de decisión anotada. Un segundo experimento mostró que esa conclusión era incompleta: el mismo modelo, con un esquema `Choice` que nombra explícitamente los estados epistémicos en disputa, separa conflicto de ignorancia con probabilidad máxima. Un tercer experimento, diseñado para aislar si esa separación dependía del esquema o del tipo de pregunta, mostró que la realidad es más desordenada que cualquiera de esas dos historias: sin categorías de escape, Jev no colapsa simétricamente ni separa limpiamente, sino que exhibe un sesgo direccional no anticipado, posiblemente ligado a pistas léxicas superficiales del texto de entrada más que a la estructura real de la evidencia. Un cuarto experimento exploratorio, con el tipo `Score`, sugiere que la variable relevante no es escalar-vs-categórico sino qué pregunta fuerza cada tipo —un escalar sobre "cuán determinada está la evidencia" sí separa conflicto severo de ausencia total, aunque no logró establecer una escala fina de grados intermedios.
 
 La lección que sobrevive a los tres experimentos no es sobre un límite fijo de Jev como producto, sino sobre dos riesgos distintos y ambos reales para quien construya sobre modelos de evaluación tipada: primero, reducir una decisión epistémicamente compleja al tipo de interfaz más simple disponible (`boolean`/Noul) descarta información por construcción; segundo, incluso una interfaz más expresiva (`Choice`) puede fallar de formas no obvias —sesgadas, no simplemente "menos informativas"— cuando el esquema no nombra explícitamente los estados que importan. Ninguna arquitectura nueva ni extensión teórica es estrictamente necesaria para el primer riesgo; el segundo exige, como mínimo, validación empírica caso por caso antes de confiar en que un tipo más rico resuelve el problema por sí solo.
 
@@ -171,7 +191,7 @@ La lección que sobrevive a los tres experimentos no es sobre un límite fijo de
 
 [14] Gu, J., Jiang, X., Shi, Z., Tian, H., Zhai, X., Xu, C., et al. (2026). *A survey on LLM-as-a-judge*. **The Innovation**, 7(6), 101253. https://www.sciencedirect.com/science/article/pii/S2666675825004564
 
-**Datos y código:** repositorio público — https://github.com/mleyvaz/jev-typed-evaluation-collapse — con `run_experiment.mjs` + `results.json` (Experimento 1), `run_experiment_choice.mjs` + `results_choice.json` (Experimento 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experimento 3), `run_missing_refute.mjs` (llamada de seguimiento que completó el caso AGREE-REFUTE en los tres esquemas tras resolver el límite de tasa), y `make_fig1_taxonomy.py` (Figura 1). Reproducible con una llave propia de AI Gateway.
+**Datos y código:** repositorio público — https://github.com/mleyvaz/jev-typed-evaluation-collapse — con `run_experiment.mjs` + `results.json` (Experimento 1), `run_experiment_choice.mjs` + `results_choice.json` (Experimento 2), `run_experiment_choice_binary.mjs` + `results_choice_binary.json` (Experimento 3), `run_missing_refute.mjs` (llamada de seguimiento que completó el caso AGREE-REFUTE en los tres esquemas tras resolver el límite de tasa), `run_experiment_graded_score.mjs` + `results_graded_score.json` (Experimento 4), y `make_fig1_taxonomy.py` (Figura 1). Reproducible con una llave propia de AI Gateway.
 
 ---
 
@@ -196,6 +216,26 @@ Los seis estados (`state`) usados en los tres experimentos, idénticos en cada u
 
 **AGREE-REFUTE** (control, refutación):
 > Witness A testified that the traffic light was green, not red, at the time of the collision. Witness B, standing nearby with an independent line of sight, separately and independently confirmed that the light was green at that same moment.
+
+Los seis estados nuevos del Experimento 4 (el séptimo caso, ANCHOR-DETERMINED, reutiliza el texto de AGREE-SUPPORT):
+
+**CONFLICT-MILD** (conflicto, leve):
+> Witness A said the traffic light "might have been red, but I couldn't say for sure — it happened so fast." Witness B said it "could have been green, though I only caught a glimpse." Neither witness is confident in their own account, and both readily admit they might be wrong.
+
+**CONFLICT-MODERATE** (conflicto, moderado):
+> Witness A, who had a reasonably clear view of the intersection, said the traffic light was red at the moment of the collision. Witness B, who was standing some distance away with a partially obstructed view, said the same traffic light was green at that moment. Both witnesses seem generally credible, though neither had an ideal vantage point.
+
+**CONFLICT-SEVERE** (conflicto, severo):
+> Sensor 1, a newly calibrated, redundant-triple-checked traffic sensor with a documented error rate of less than 0.001%, recorded the light as RED at 14:03:02.000, with full internal diagnostics confirming normal operation. Sensor 2, an independent sensor of the same specification mounted on the same pole and calibrated the same day, recorded the light as GREEN at the exact same timestamp, 14:03:02.000, with full internal diagnostics confirming normal operation. Both sensors are considered maximally reliable; there is no known explanation for the disagreement.
+
+**SILENCE-MILD** (ausencia, leve):
+> A passing dashcam recorded a few frames of the intersection, but the traffic light itself is out of frame in all of them; only the road surface and nearby cars are visible. No other recording or testimony covers the moment in question.
+
+**SILENCE-MODERATE** (ausencia, moderada):
+> A pedestrian who was not looking at the light mentioned, in an offhand and unprompted remark days later, that they "vaguely recall something about the light," but could not say what color when pressed, or whether they were even looking at the right intersection. No other information exists.
+
+**SILENCE-SEVERE** (ausencia, severa):
+> No witnesses were present at the intersection at the time in question. No traffic cameras were operating in that area that day. There is no record, sensor log, or testimony of any kind describing the state of the traffic light at that moment.
 
 ## Anexo B. Código de la llamada, por experimento
 
@@ -253,6 +293,27 @@ const result = await evaluate({
 });
 ```
 
+**Experimento 4 (`Score`, determinación graduada):**
+```js
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT,
+  questions: {
+    determinacy: {
+      type: 'score',
+      instructions: 'How determinate (certain) is the available evidence about the color of the traffic light, regardless of which color it points to?',
+      criteria: [
+        'Very high confidence: the evidence clearly and unambiguously points to one color.',
+        'High confidence: the evidence leans clearly to one color, with minor uncertainty.',
+        'Moderate: there is no reliable basis to favor one color over the other.',
+        'Low confidence: there is almost no basis to judge the color.',
+        'No confidence: there is no basis whatsoever to judge the color.',
+      ], // array ordenado, no mapa — a diferencia de `criteria` en Choice
+    },
+  },
+});
+```
+
 ## Anexo C. Respuesta completa (`answers`) por caso
 
 Objeto `answers` devuelto por Jev para cada caso completado, sin editar (el objeto completo de respuesta incluye además `usage`, `warnings`, `rounding` y `providerMetadata`, disponibles en los archivos `results*.json` del repositorio).
@@ -291,4 +352,29 @@ SILENT-1:       {"lightState":{"type":"choice","choice":"red","probabilities":{"
 SILENT-2:       {"lightState":{"type":"choice","choice":"red","probabilities":{"red":0.77,"green":0.23}}}
 AGREE-SUPPORT:  {"lightState":{"type":"choice","choice":"red","probabilities":{"red":1,"green":0}}}
 AGREE-REFUTE:   {"lightState":{"type":"choice","choice":"green","probabilities":{"red":0,"green":1}}}
+```
+
+**Experimento 4 — `Score` (determinación graduada):**
+```json
+ANCHOR-DETERMINED:
+  {"determinacy":{"type":"score","score":0.25,
+    "probabilities":{"0":0.75,"1":0.25,"2":0,"3":0,"4":0}}}
+CONFLICT-MILD:
+  {"determinacy":{"type":"score","score":2.67,
+    "probabilities":{"0":0,"1":0,"2":0.36,"3":0.62,"4":0.02}}}
+CONFLICT-MODERATE:
+  {"determinacy":{"type":"score","score":1.58,
+    "probabilities":{"0":0,"1":0.43,"2":0.56,"3":0.01,"4":0}}}
+CONFLICT-SEVERE:
+  {"determinacy":{"type":"score","score":2.04,
+    "probabilities":{"0":0,"1":0,"2":0.97,"3":0.02,"4":0.01}}}
+SILENCE-MILD:
+  {"determinacy":{"type":"score","score":3.88,
+    "probabilities":{"0":0,"1":0,"2":0.03,"3":0.07,"4":0.90}}}
+SILENCE-MODERATE:
+  {"determinacy":{"type":"score","score":3.66,
+    "probabilities":{"0":0,"1":0,"2":0.02,"3":0.30,"4":0.68}}}
+SILENCE-SEVERE:
+  {"determinacy":{"type":"score","score":3.95,
+    "probabilities":{"0":0,"1":0,"2":0.02,"3":0.01,"4":0.97}}}
 ```

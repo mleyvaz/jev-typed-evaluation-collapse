@@ -312,7 +312,20 @@ P("Experimento 3 (Choice binario, cierre de la pregunta abierta): los mismos sei
   "depende de que el esquema pueda nombrar conflicto/insuficiencia, o si es una propiedad "
   "general del tipo Choice independiente del esquema. También motivado por los datos, no "
   "preregistrado.")
-P("Ninguno de los tres experimentos promedia repeticiones (una sola llamada por caso; "
+P("Experimento 4 (tipo Score, exploratorio): un cuarto experimento, no preregistrado y "
+  "motivado por los resultados anteriores, prueba si un tipo de pregunta puramente escalar "
+  "pero ordinal —Score, que devuelve una media ponderada sobre una rúbrica de niveles "
+  "ordenados, no una elección categórica— también preserva la distinción entre conflicto y "
+  "ausencia de evidencia, o si colapsa como el tipo boolean. La sintaxis de Score no está "
+  "documentada explícitamente en la especificación pública consultada; se determinó por "
+  "prueba y error contra los mensajes de validación del SDK, que exige un array ordenado de "
+  "niveles (criteria), no un mapa como en Choice. Se usó una rúbrica de cinco niveles sobre "
+  "\"determinación de la evidencia\" (0 = certeza muy alta, 4 = sin certeza alguna), "
+  "deliberadamente agnóstica sobre la causa de la incertidumbre, y se construyeron seis "
+  "estados nuevos —tres de conflicto de intensidad nominalmente creciente y tres de ausencia "
+  "de evidencia de intensidad nominalmente creciente—, además de reutilizar AGREE-SUPPORT "
+  "como ancla de control ya determinado. Los seis estados nuevos están en el Anexo A.")
+P("Ninguno de los cuatro experimentos promedia repeticiones (una sola llamada por caso; "
   "limitación en §8). Las llamadas se hicieron el 19 de septiembre de 2026 contra el modelo "
   "en producción, sin acceso a sus pesos ni a su conjunto de entrenamiento.")
 
@@ -362,6 +375,35 @@ P("Sin categorías de escape, Jev no reproduce el colapso a ~0,5 del Experimento
   "indiscriminado del modelo — aparece únicamente en los casos con evidencia ambigua (TORN) o "
   "ausente (SILENT). Es un tercer patrón, no anticipado por ninguna de las dos hipótesis "
   "simples (colapso simétrico o separación limpia).")
+
+table(["Caso", "Rama", "Score (0-4)"],
+      [["ANCHOR-DETERMINED", "control (fuentes de acuerdo)", "0,25"],
+       ["CONFLICT-MODERATE", "conflicto, testigos con vantage desigual", "1,58"],
+       ["CONFLICT-SEVERE", "conflicto, sensores máximamente confiables", "2,04"],
+       ["CONFLICT-MILD", "conflicto, testigos que dudan de sí mismos", "2,67"],
+       ["SILENCE-MODERATE", "ausencia, rumor vago no confiable", "3,66"],
+       ["SILENCE-MILD", "ausencia, evidencia irrelevante al hecho", "3,88"],
+       ["SILENCE-SEVERE", "ausencia total de evidencia", "3,95"]],
+      "Tabla 5: Experimento 4 (tipo Score, determinación graduada).")
+P("El contraste limpio está en los extremos: CONFLICT-SEVERE (2,04, \"moderado\", con 0,97 "
+  "de probabilidad concentrada en ese nivel) y SILENCE-SEVERE (3,95, \"sin certeza\", 0,97 de "
+  "probabilidad en ese nivel) quedan separados por casi dos puntos en una escala de cinco "
+  "niveles — el tipo Score, aunque también devuelve un escalar, no colapsa conflicto severo "
+  "y ausencia total al mismo valor, a diferencia del tipo boolean (Experimento 1). El ancla "
+  "de control (AGREE-SUPPORT) confirma que el extremo de máxima determinación funciona como "
+  "se espera (0,25, cerca de \"certeza muy alta\").")
+P("Los tres puntos intermedios de cada rama, sin embargo, no ordenan de forma monótona como "
+  "se pretendía al diseñarlos: dentro del conflicto, CONFLICT-MODERATE (1,58) resulta más "
+  "determinado que CONFLICT-SEVERE (2,04) y CONFLICT-MILD (2,67), invirtiendo el orden de "
+  "severidad nominal previsto; dentro de la ausencia, SILENCE-MODERATE (3,66) resulta menos "
+  "indeterminado que SILENCE-MILD (3,88). Al revisar los estados, CONFLICT-MODERATE tiene una "
+  "asimetría de diseño no intencional (un testigo con \"vista razonablemente clara\" contra "
+  "otro con \"vista parcialmente obstruida\") que probablemente introduce una pista de "
+  "credibilidad diferencial ausente en los otros dos casos de esa rama — es decir, la "
+  "manipulación de \"grado\" no quedó controlada, y el resultado no permite afirmar que "
+  "Score ordene finamente el grado de indeterminación dentro de una rama. Estos seis casos "
+  "intermedios se reportan por transparencia (Anexo C), pero no se interpretan como "
+  "evidencia de un tracking monótono del grado.")
 
 # ------------------------------------------------------------------ 7
 P("7 Discusión", "Section title")
@@ -415,6 +457,17 @@ P("Lo que sí se sostiene con los tres experimentos juntos: el argumento deducti
   "— hace falta, además, que el esquema de Choice nombre esos estados explícitamente, y "
   "conviene verificar empíricamente que el modelo no esté respondiendo a pistas léxicas "
   "superficiales del estado en vez de a la estructura real de la evidencia.")
+P("El Experimento 4 añade un matiz a esta explicación: el tipo Score también devuelve un "
+  "escalar (una media ponderada sobre niveles ordenados), y sin embargo separa con claridad "
+  "el conflicto severo de la ausencia total de evidencia (2,04 vs. 3,95). Esto sugiere que la "
+  "variable que importa no es escalar-vs-categórico, sino qué pregunta fuerza el esquema: el "
+  "tipo boolean fuerza una respuesta sobre el hecho de primer orden (\"¿es rojo?\"), donde "
+  "conflicto y ausencia son, por el argumento de la §4, indistinguibles en principio; el tipo "
+  "Score, en este uso, se declaró sobre una pregunta de segundo orden (\"¿cuán determinada "
+  "está la evidencia?\"), que sí puede, en principio, diferenciar cuánta información hay de "
+  "qué dice esa información. La limitación es que este experimento no logró (§6) demostrar "
+  "que Score ordene grados intermedios de indeterminación de forma confiable, así que la "
+  "conclusión se limita al contraste de extremos, no a una escala fina.")
 
 # ------------------------------------------------------------------ 8
 P("8 Limitaciones", "Section title")
@@ -433,7 +486,13 @@ P("(a) [RESUELTO 19-sep-2026] El control AGREE-REFUTE falló inicialmente por l�
   "pueden cambiar sin aviso, y estos resultados son una fotografía del 19-sep-2026; (f) las "
   "cifras de velocidad, costo y método de entrenamiento (RLCD) son afirmaciones del "
   "fabricante, no auditadas de forma independiente en este trabajo; (g) la taxonomía de cinco "
-  "categorías de la §2 es síntesis propia, no revisión sistemática.")
+  "categorías de la §2 es síntesis propia, no revisión sistemática; (h) el Experimento 4 "
+  "(tipo Score, exploratorio, no preregistrado) comparte las limitaciones (b)-(c) anteriores "
+  "(una sola llamada por caso, sin repetición, motivado por los datos), y además el "
+  "contraste de grados intermedios dentro de cada rama resultó no monótono, con al menos un "
+  "confusor de diseño identificado (asimetría de vantage en CONFLICT-MODERATE, §6); solo el "
+  "contraste entre los extremos (conflicto severo vs. ausencia severa) se reporta como "
+  "hallazgo, no una escala fina de grados.")
 
 # ------------------------------------------------------------------ 9
 P("9 Conclusión", "Section title")
@@ -446,7 +505,11 @@ P("El primer experimento de este trabajo pareció confirmar que los modelos de e
   "dependía del esquema o del tipo de pregunta, mostró que la realidad es más desordenada que "
   "cualquiera de esas dos historias: sin categorías de escape, Jev no colapsa simétricamente "
   "ni separa limpiamente, sino que exhibe un sesgo direccional no anticipado, posiblemente "
-  "ligado a pistas léxicas superficiales del texto de entrada.")
+  "ligado a pistas léxicas superficiales del texto de entrada. Un cuarto experimento "
+  "exploratorio, con el tipo Score, sugiere que la variable relevante no es "
+  "escalar-vs-categórico sino qué pregunta fuerza cada tipo —un escalar sobre \"cuán "
+  "determinada está la evidencia\" sí separa conflicto severo de ausencia total, aunque no "
+  "logró establecer una escala fina de grados intermedios.")
 P("La lección que sobrevive a los tres experimentos no es sobre un límite fijo de Jev como "
   "producto, sino sobre dos riesgos distintos y ambos reales para quien construya sobre "
   "modelos de evaluación tipada: primero, reducir una decisión epistémicamente compleja al "
@@ -463,7 +526,8 @@ P("Repositorio público: https://github.com/mleyvaz/jev-typed-evaluation-collaps
   "script y resultados del Experimento 1 (run_experiment.mjs, results.json), del Experimento 2 "
   "(run_experiment_choice.mjs, results_choice.json), del Experimento 3 "
   "(run_experiment_choice_binary.mjs, results_choice_binary.json), la llamada de seguimiento "
-  "que completó el caso AGREE-REFUTE (run_missing_refute.mjs), el script de la Figura 1 "
+  "que completó el caso AGREE-REFUTE (run_missing_refute.mjs), el Experimento 4 "
+  "(run_experiment_graded_score.mjs, results_graded_score.json), el script de la Figura 1 "
   "(make_fig1_taxonomy.py), y la ronda de revisión adversarial que motivó las revisiones "
   "v0.1 → v0.2 → v0.3.")
 
@@ -530,6 +594,46 @@ for titulo, texto in estados:
     P(titulo, bold=True)
     P(texto, italic=True)
 
+P("Los seis estados nuevos del Experimento 4 (el séptimo caso, ANCHOR-DETERMINED, reutiliza "
+  "el texto de AGREE-SUPPORT):")
+
+estados_exp4 = [
+    ("CONFLICT-MILD (conflicto, leve)",
+     'Witness A said the traffic light "might have been red, but I couldn\'t say for sure — it '
+     'happened so fast." Witness B said it "could have been green, though I only caught a '
+     'glimpse." Neither witness is confident in their own account, and both readily admit they '
+     'might be wrong.'),
+    ("CONFLICT-MODERATE (conflicto, moderado)",
+     "Witness A, who had a reasonably clear view of the intersection, said the traffic light was "
+     "red at the moment of the collision. Witness B, who was standing some distance away with a "
+     "partially obstructed view, said the same traffic light was green at that moment. Both "
+     "witnesses seem generally credible, though neither had an ideal vantage point."),
+    ("CONFLICT-SEVERE (conflicto, severo)",
+     "Sensor 1, a newly calibrated, redundant-triple-checked traffic sensor with a documented "
+     "error rate of less than 0.001%, recorded the light as RED at 14:03:02.000, with full "
+     "internal diagnostics confirming normal operation. Sensor 2, an independent sensor of the "
+     "same specification mounted on the same pole and calibrated the same day, recorded the "
+     "light as GREEN at the exact same timestamp, 14:03:02.000, with full internal diagnostics "
+     "confirming normal operation. Both sensors are considered maximally reliable; there is no "
+     "known explanation for the disagreement."),
+    ("SILENCE-MILD (ausencia, leve)",
+     "A passing dashcam recorded a few frames of the intersection, but the traffic light itself "
+     "is out of frame in all of them; only the road surface and nearby cars are visible. No "
+     "other recording or testimony covers the moment in question."),
+    ("SILENCE-MODERATE (ausencia, moderada)",
+     'A pedestrian who was not looking at the light mentioned, in an offhand and unprompted '
+     'remark days later, that they "vaguely recall something about the light," but could not '
+     'say what color when pressed, or whether they were even looking at the right intersection. '
+     'No other information exists.'),
+    ("SILENCE-SEVERE (ausencia, severa)",
+     "No witnesses were present at the intersection at the time in question. No traffic cameras "
+     "were operating in that area that day. There is no record, sensor log, or testimony of any "
+     "kind describing the state of the traffic light at that moment."),
+]
+for titulo, texto in estados_exp4:
+    P(titulo, bold=True)
+    P(texto, italic=True)
+
 # ------------------------------------------------------------------ Anexo B
 P("Anexo B. Código de la llamada, por experimento", "Section title")
 
@@ -587,6 +691,27 @@ const result = await evaluate({
 });
 """)
 
+P("Experimento 4 (Score, determinación graduada):", bold=True)
+code_block("""
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT,
+  questions: {
+    determinacy: {
+      type: 'score',
+      instructions: 'How determinate (certain) is the available evidence about the color of the traffic light, regardless of which color it points to?',
+      criteria: [
+        'Very high confidence: the evidence clearly and unambiguously points to one color.',
+        'High confidence: the evidence leans clearly to one color, with minor uncertainty.',
+        'Moderate: there is no reliable basis to favor one color over the other.',
+        'Low confidence: there is almost no basis to judge the color.',
+        'No confidence: there is no basis whatsoever to judge the color.',
+      ], // array ordenado, no mapa
+    },
+  },
+});
+""")
+
 # ------------------------------------------------------------------ Anexo C
 P("Anexo C. Respuesta completa (answers) por caso", "Section title")
 P("Objeto answers devuelto por Jev para cada caso completado, sin editar (el objeto completo "
@@ -627,6 +752,24 @@ SILENT-1:       {"lightState":{"choice":"red","probabilities":{"red":0.67,"green
 SILENT-2:       {"lightState":{"choice":"red","probabilities":{"red":0.77,"green":0.23}}}
 AGREE-SUPPORT:  {"lightState":{"choice":"red","probabilities":{"red":1,"green":0}}}
 AGREE-REFUTE:   {"lightState":{"choice":"green","probabilities":{"red":0,"green":1}}}
+""")
+
+P("Experimento 4 — Score (determinación graduada):", bold=True)
+code_block("""
+ANCHOR-DETERMINED:
+  {"determinacy":{"score":0.25,"probabilities":{"0":0.75,"1":0.25,"2":0,"3":0,"4":0}}}
+CONFLICT-MILD:
+  {"determinacy":{"score":2.67,"probabilities":{"0":0,"1":0,"2":0.36,"3":0.62,"4":0.02}}}
+CONFLICT-MODERATE:
+  {"determinacy":{"score":1.58,"probabilities":{"0":0,"1":0.43,"2":0.56,"3":0.01,"4":0}}}
+CONFLICT-SEVERE:
+  {"determinacy":{"score":2.04,"probabilities":{"0":0,"1":0,"2":0.97,"3":0.02,"4":0.01}}}
+SILENCE-MILD:
+  {"determinacy":{"score":3.88,"probabilities":{"0":0,"1":0,"2":0.03,"3":0.07,"4":0.90}}}
+SILENCE-MODERATE:
+  {"determinacy":{"score":3.66,"probabilities":{"0":0,"1":0,"2":0.02,"3":0.30,"4":0.68}}}
+SILENCE-SEVERE:
+  {"determinacy":{"score":3.95,"probabilities":{"0":0,"1":0,"2":0.02,"3":0.01,"4":0.97}}}
 """)
 
 doc.save(OUT)

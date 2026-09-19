@@ -300,7 +300,20 @@ P("Experiment 3 (binary Choice, closing the open question): the same six states,
   "on the schema being able to name conflict/insufficiency, or whether it is a general "
   "property of the Choice type independent of the schema. Also data-motivated, not "
   "preregistered.")
-P("None of the three experiments averages repetitions (a single call per case; limitation "
+P("Experiment 4 (Score type, exploratory): a fourth experiment, not preregistered and "
+  "motivated by the prior results, tests whether a purely scalar but ordinal question type "
+  "— Score, which returns a probability-weighted mean over a rubric of ordered levels, "
+  "not a categorical choice — also preserves the distinction between conflict and "
+  "absence of evidence, or collapses like the boolean type. The Score syntax is not "
+  "explicitly documented in the public specification consulted; it was determined by trial "
+  "and error against the SDK's validation messages, which require an ordered array of levels "
+  "(criteria), not a map as in Choice. A five-level rubric on \"evidential determinacy\" was "
+  "used (0 = very high confidence, 4 = no confidence at all), deliberately agnostic about the "
+  "cause of the uncertainty, and six new states were constructed — three of nominally "
+  "increasing conflict intensity and three of nominally increasing evidence-absence "
+  "intensity — plus reusing AGREE-SUPPORT as an already-determined control anchor. The "
+  "six new states are in Appendix A.")
+P("None of the four experiments averages repetitions (a single call per case; limitation "
   "in §8). The calls were made on September 19, 2026 against the production model, with no "
   "access to its weights or training set.")
 
@@ -351,6 +364,34 @@ P("Without escape categories, Jev does not reproduce the ~0.5 collapse of Experi
   "absent (SILENT) evidence. It is a third "
   "pattern, unanticipated by either of the two simple hypotheses (symmetric collapse or clean "
   "separation).")
+
+table(["Case", "Branch", "Score (0-4)"],
+      [["ANCHOR-DETERMINED", "control (sources agree)", "0.25"],
+       ["CONFLICT-MODERATE", "conflict, unequal witness vantage", "1.58"],
+       ["CONFLICT-SEVERE", "conflict, maximally reliable sensors", "2.04"],
+       ["CONFLICT-MILD", "conflict, self-doubting witnesses", "2.67"],
+       ["SILENCE-MODERATE", "absence, vague unreliable rumor", "3.66"],
+       ["SILENCE-MILD", "absence, evidence irrelevant to the fact", "3.88"],
+       ["SILENCE-SEVERE", "total absence of evidence", "3.95"]],
+      "Table 5: Experiment 4 (Score type, graded determinacy).")
+P("The clean contrast is at the extremes: CONFLICT-SEVERE (2.04, \"moderate,\" with 0.97 "
+  "probability concentrated on that level) and SILENCE-SEVERE (3.95, \"no confidence,\" 0.97 "
+  "probability on that level) are separated by nearly two points on a five-level scale — "
+  "the Score type, although it also returns a scalar, does not collapse severe conflict and "
+  "total absence to the same value, unlike the boolean type (Experiment 1). The control "
+  "anchor (AGREE-SUPPORT) confirms that the maximum-determinacy extreme works as expected "
+  "(0.25, near \"very high confidence\").")
+P("The three intermediate points in each branch, however, do not order monotonically as "
+  "intended by design: within conflict, CONFLICT-MODERATE (1.58) turns out more determinate "
+  "than CONFLICT-SEVERE (2.04) and CONFLICT-MILD (2.67), reversing the intended severity "
+  "order; within absence, SILENCE-MODERATE (3.66) turns out less indeterminate than "
+  "SILENCE-MILD (3.88). On review, CONFLICT-MODERATE has an unintentional design asymmetry "
+  "(one witness with a \"reasonably clear view\" versus one with a \"partially obstructed "
+  "view\") that likely introduces a differential-credibility cue absent from the other two "
+  "cases in that branch — that is, the \"degree\" manipulation was not well controlled, "
+  "and the result does not support a claim that Score finely orders the degree of "
+  "indeterminacy within a branch. These six intermediate cases are reported for transparency "
+  "(Appendix C), but are not interpreted as evidence of monotonic tracking of degree.")
 
 # ------------------------------------------------------------------ 7
 P("7 Discussion", "Section title")
@@ -405,6 +446,17 @@ P("What does hold up across the three experiments together: the deductive argume
   "Choice schema must also explicitly name those states as first-class options, and it is "
   "worth empirically verifying that the model is not responding to superficial lexical cues "
   "in the state rather than to the actual structure of the evidence.")
+P("Experiment 4 adds a nuance to this explanation: the Score type also returns a scalar (a "
+  "probability-weighted mean over ordered levels), and yet it clearly separates severe "
+  "conflict from total absence of evidence (2.04 vs. 3.95). This suggests that the relevant "
+  "variable is not scalar-vs-categorical, but what question the schema forces: the boolean "
+  "type forces an answer about the first-order fact (\"is it red?\"), where conflict and "
+  "absence are, by the argument in §4, indistinguishable in principle; the Score type, as "
+  "used here, was declared over a second-order question (\"how determinate is the "
+  "evidence?\"), which can, in principle, differentiate how much information there is from "
+  "what that information says. The limitation is that this experiment did not manage (§6) to "
+  "show that Score reliably orders intermediate degrees of indeterminacy, so the conclusion "
+  "is limited to the extremes contrast, not a fine-grained scale.")
 
 # ------------------------------------------------------------------ 8
 P("8 Limitations", "Section title")
@@ -423,7 +475,12 @@ P("(a) [RESOLVED 2026-09-19] The AGREE-REFUTE control initially failed due to th
   "its behavior and limits may change without notice, and these results should be read as a "
   "snapshot of 2026-09-19; (f) the speed, cost, and training-method (RLCD) figures are vendor "
   "claims, not independently audited in this work; (g) the five-category taxonomy in §2 is "
-  "the author's own synthesis, not a systematic review.")
+  "the author's own synthesis, not a systematic review; (h) Experiment 4 (Score type, "
+  "exploratory, not preregistered) shares limitations (b)-(c) above (a single call per case, "
+  "no repetition, data-motivated), and in addition the intermediate-degree contrast within "
+  "each branch turned out non-monotonic, with at least one identified design confound "
+  "(vantage asymmetry in CONFLICT-MODERATE, §6); only the extremes contrast (severe conflict "
+  "vs. severe absence) is reported as a finding, not a fine-grained degree scale.")
 
 # ------------------------------------------------------------------ 9
 P("9 Conclusion", "Section title")
@@ -436,7 +493,11 @@ P("The first experiment in this work seemed to confirm that typed evaluation mod
   "question type, showed that reality is messier than either of those two stories: without "
   "escape categories, Jev neither collapses symmetrically nor separates cleanly, but instead "
   "exhibits an unanticipated directional bias, possibly tied to superficial lexical cues in "
-  "the input text.")
+  "the input text. A fourth, exploratory experiment, with the Score type, suggests that the "
+  "relevant variable is not scalar-vs-categorical but what question each type forces — a "
+  "scalar over \"how determinate is the evidence\" does separate severe conflict from total "
+  "absence, though it did not manage to establish a fine-grained scale of intermediate "
+  "degrees.")
 P("The lesson that survives all three experiments is not about a fixed limit of Jev as a "
   "product, but about two distinct and equally real risks for anyone building on typed "
   "evaluation models: first, reducing an epistemically complex decision to the simplest "
@@ -453,7 +514,8 @@ P("Public repository: https://github.com/mleyvaz/jev-typed-evaluation-collapse �
   "the script and results of Experiment 1 (run_experiment.mjs, results.json), Experiment 2 "
   "(run_experiment_choice.mjs, results_choice.json), Experiment 3 "
   "(run_experiment_choice_binary.mjs, results_choice_binary.json), the follow-up call that "
-  "completed the AGREE-REFUTE case (run_missing_refute.mjs), the Figure 1 script "
+  "completed the AGREE-REFUTE case (run_missing_refute.mjs), Experiment 4 "
+  "(run_experiment_graded_score.mjs, results_graded_score.json), the Figure 1 script "
   "(make_fig1_taxonomy.py), and the adversarial review round that motivated the v0.1 → v0.2 "
   "→ v0.3 revisions.")
 
@@ -520,6 +582,46 @@ for titulo, texto in estados:
     P(titulo, bold=True)
     P(texto, italic=True)
 
+P("The six new states for Experiment 4 (the seventh case, ANCHOR-DETERMINED, reuses the "
+  "AGREE-SUPPORT text):")
+
+estados_exp4 = [
+    ("CONFLICT-MILD (conflict, mild)",
+     'Witness A said the traffic light "might have been red, but I couldn\'t say for sure — '
+     'it happened so fast." Witness B said it "could have been green, though I only caught a '
+     'glimpse." Neither witness is confident in their own account, and both readily admit '
+     'they might be wrong.'),
+    ("CONFLICT-MODERATE (conflict, moderate)",
+     "Witness A, who had a reasonably clear view of the intersection, said the traffic light "
+     "was red at the moment of the collision. Witness B, who was standing some distance away "
+     "with a partially obstructed view, said the same traffic light was green at that moment. "
+     "Both witnesses seem generally credible, though neither had an ideal vantage point."),
+    ("CONFLICT-SEVERE (conflict, severe)",
+     "Sensor 1, a newly calibrated, redundant-triple-checked traffic sensor with a documented "
+     "error rate of less than 0.001%, recorded the light as RED at 14:03:02.000, with full "
+     "internal diagnostics confirming normal operation. Sensor 2, an independent sensor of "
+     "the same specification mounted on the same pole and calibrated the same day, recorded "
+     "the light as GREEN at the exact same timestamp, 14:03:02.000, with full internal "
+     "diagnostics confirming normal operation. Both sensors are considered maximally "
+     "reliable; there is no known explanation for the disagreement."),
+    ("SILENCE-MILD (absence, mild)",
+     "A passing dashcam recorded a few frames of the intersection, but the traffic light "
+     "itself is out of frame in all of them; only the road surface and nearby cars are "
+     "visible. No other recording or testimony covers the moment in question."),
+    ("SILENCE-MODERATE (absence, moderate)",
+     'A pedestrian who was not looking at the light mentioned, in an offhand and unprompted '
+     'remark days later, that they "vaguely recall something about the light," but could not '
+     'say what color when pressed, or whether they were even looking at the right '
+     'intersection. No other information exists.'),
+    ("SILENCE-SEVERE (absence, severe)",
+     "No witnesses were present at the intersection at the time in question. No traffic "
+     "cameras were operating in that area that day. There is no record, sensor log, or "
+     "testimony of any kind describing the state of the traffic light at that moment."),
+]
+for titulo, texto in estados_exp4:
+    P(titulo, bold=True)
+    P(texto, italic=True)
+
 # ------------------------------------------------------------------ Appendix B
 P("Appendix B. Call Code, per Experiment", "Section title")
 
@@ -577,6 +679,27 @@ const result = await evaluate({
 });
 """)
 
+P("Experiment 4 (Score, graded determinacy):", bold=True)
+code_block("""
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT,
+  questions: {
+    determinacy: {
+      type: 'score',
+      instructions: 'How determinate (certain) is the available evidence about the color of the traffic light, regardless of which color it points to?',
+      criteria: [
+        'Very high confidence: the evidence clearly and unambiguously points to one color.',
+        'High confidence: the evidence leans clearly to one color, with minor uncertainty.',
+        'Moderate: there is no reliable basis to favor one color over the other.',
+        'Low confidence: there is almost no basis to judge the color.',
+        'No confidence: there is no basis whatsoever to judge the color.',
+      ], // ordered array, not a map
+    },
+  },
+});
+""")
+
 # ------------------------------------------------------------------ Appendix C
 P("Appendix C. Full Response (answers) per Case", "Section title")
 P("The answers object returned by Jev for each completed case, unedited (the full response "
@@ -617,6 +740,24 @@ SILENT-1:       {"lightState":{"choice":"red","probabilities":{"red":0.67,"green
 SILENT-2:       {"lightState":{"choice":"red","probabilities":{"red":0.77,"green":0.23}}}
 AGREE-SUPPORT:  {"lightState":{"choice":"red","probabilities":{"red":1,"green":0}}}
 AGREE-REFUTE:   {"lightState":{"choice":"green","probabilities":{"red":0,"green":1}}}
+""")
+
+P("Experiment 4 — Score (graded determinacy):", bold=True)
+code_block("""
+ANCHOR-DETERMINED:
+  {"determinacy":{"score":0.25,"probabilities":{"0":0.75,"1":0.25,"2":0,"3":0,"4":0}}}
+CONFLICT-MILD:
+  {"determinacy":{"score":2.67,"probabilities":{"0":0,"1":0,"2":0.36,"3":0.62,"4":0.02}}}
+CONFLICT-MODERATE:
+  {"determinacy":{"score":1.58,"probabilities":{"0":0,"1":0.43,"2":0.56,"3":0.01,"4":0}}}
+CONFLICT-SEVERE:
+  {"determinacy":{"score":2.04,"probabilities":{"0":0,"1":0,"2":0.97,"3":0.02,"4":0.01}}}
+SILENCE-MILD:
+  {"determinacy":{"score":3.88,"probabilities":{"0":0,"1":0,"2":0.03,"3":0.07,"4":0.90}}}
+SILENCE-MODERATE:
+  {"determinacy":{"score":3.66,"probabilities":{"0":0,"1":0,"2":0.02,"3":0.30,"4":0.68}}}
+SILENCE-SEVERE:
+  {"determinacy":{"score":3.95,"probabilities":{"0":0,"1":0,"2":0.02,"3":0.01,"4":0.97}}}
 """)
 
 doc.save(OUT)
