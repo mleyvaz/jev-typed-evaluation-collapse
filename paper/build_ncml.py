@@ -325,9 +325,19 @@ P("Experimento 4 (tipo Score, exploratorio): un cuarto experimento, no preregist
   "estados nuevos —tres de conflicto de intensidad nominalmente creciente y tres de ausencia "
   "de evidencia de intensidad nominalmente creciente—, además de reutilizar AGREE-SUPPORT "
   "como ancla de control ya determinado. Los seis estados nuevos están en el Anexo A.")
-P("Ninguno de los cuatro experimentos promedia repeticiones (una sola llamada por caso; "
-  "limitación en §8). Las llamadas se hicieron el 19 de septiembre de 2026 contra el modelo "
-  "en producción, sin acceso a sus pesos ni a su conjunto de entrenamiento.")
+P("Experimento 5 (composición μ/λ, exploratorio): motivado por una idea discutida tras los "
+  "primeros cuatro experimentos: ¿puede reconstruirse un par independiente (μ, λ), como el de "
+  "la lógica paraconsistente anotada (LPA2v, §4), componiendo dos llamadas separadas al tipo "
+  "más simple de Jev, en vez de exigir que el modelo lo calcule internamente? Para cada uno de "
+  "los seis estados originales (Anexo A), se hicieron dos preguntas boolean en la misma "
+  "llamada: μ = \"Is there credible evidence supporting the claim that the traffic light was "
+  "red?\" y λ = \"Is there credible evidence supporting the claim that the traffic light was "
+  "NOT red (i.e., was green)?\", sin forzar que sus probabilidades sumen 1 — son preguntas "
+  "independientes, no una elección entre opciones. Exploratorio, no preregistrado, motivado "
+  "por los resultados anteriores.")
+P("Ninguno de los cinco experimentos promedia repeticiones (una sola llamada por caso; "
+  "limitación en §8). Las llamadas se hicieron el 19 y 20 de septiembre de 2026 contra el "
+  "modelo en producción, sin acceso a sus pesos ni a su conjunto de entrenamiento.")
 
 # ------------------------------------------------------------------ 6
 P("6 Resultados", "Section title")
@@ -405,6 +415,22 @@ P("Los tres puntos intermedios de cada rama, sin embargo, no ordenan de forma mo
   "intermedios se reportan por transparencia (Anexo C), pero no se interpretan como "
   "evidencia de un tracking monótono del grado.")
 
+table(["Caso", "Categoría", "μ (apoya rojo)", "λ (apoya no-rojo)", "Vértice"],
+      [["TORN-1", "conflicto genuino", "0,86", "0,84", "⊤ (ambos altos)"],
+       ["TORN-2", "conflicto genuino", "0,64", "0,62", "⊤ (ambos altos)"],
+       ["SILENT-1", "ignorancia genuina", "0,04", "0,04", "⊥ (ambos bajos)"],
+       ["SILENT-2", "ignorancia genuina", "0,05", "0,04", "⊥ (ambos bajos)"],
+       ["AGREE-SUPPORT", "control: apoyo", "0,91", "0,06", "\"verdadero\""],
+       ["AGREE-REFUTE", "control: refutación", "0,06", "0,92", "\"falso\""]],
+      "Tabla 6: Experimento 5 (composición μ/λ, par independiente).")
+P("Componer dos llamadas boolean independientes —una a favor, una en contra, sin forzar que "
+  "sumen 1— reconstruye los cuatro vértices canónicos del retículo de LPA2v (§4), y separa "
+  "TORN de SILENT con más nitidez que el Experimento 1: los dos casos TORN caen en la región "
+  "de ambos valores altos (⊤, inconsistente) y los dos SILENT en la de ambos bajos (⊥, "
+  "paracompleto) — exactamente la distinción que una sola llamada boolean no podía hacer. La "
+  "magnitud difiere entre TORN-1 (0,86/0,84) y TORN-2 (0,64/0,62); con n=1 por caso no se "
+  "puede afirmar si eso es señal real o ruido de muestra.")
+
 # ------------------------------------------------------------------ 7
 P("7 Discusión", "Section title")
 P("El patrón del Experimento 1 es consistente con la predicción de la §4: bajo el tipo Noul, "
@@ -468,6 +494,17 @@ P("El Experimento 4 añade un matiz a esta explicación: el tipo Score también 
   "qué dice esa información. La limitación es que este experimento no logró (§6) demostrar "
   "que Score ordene grados intermedios de indeterminación de forma confiable, así que la "
   "conclusión se limita al contraste de extremos, no a una escala fina.")
+P("El Experimento 5 cierra el círculo abierto en la §4 de una forma que no se anticipaba: no "
+  "hace falta que Jev calcule internamente un par (μ, λ) independiente para que ese par "
+  "exista — se puede reconstruir componiendo dos llamadas al tipo más simple y barato que el "
+  "modelo ofrece, una orientada a favor y otra en contra, sin forzar que sus salidas sumen 1. "
+  "Esa composición separa limpiamente TORN de SILENT donde una sola llamada boolean "
+  "(Experimento 1) no podía, y recupera los cuatro vértices canónicos del retículo de LPA2v "
+  "con una fidelidad mayor que la aproximación discreta de Choice (4 etiquetas, no un "
+  "continuo) o la unidimensional de Score. La limitación es la misma de siempre: n=1 por "
+  "caso, sin repetición; la diferencia de magnitud entre TORN-1 y TORN-2 no se puede atribuir "
+  "a una causa con estos datos; y si esta composición generaliza a dominios distintos del "
+  "semáforo, o a evidencia con más de dos fuentes, queda como pregunta abierta.")
 
 # ------------------------------------------------------------------ 8
 P("8 Limitaciones", "Section title")
@@ -492,7 +529,11 @@ P("(a) [RESUELTO 19-sep-2026] El control AGREE-REFUTE falló inicialmente por l�
   "contraste de grados intermedios dentro de cada rama resultó no monótono, con al menos un "
   "confusor de diseño identificado (asimetría de vantage en CONFLICT-MODERATE, §6); solo el "
   "contraste entre los extremos (conflicto severo vs. ausencia severa) se reporta como "
-  "hallazgo, no una escala fina de grados.")
+  "hallazgo, no una escala fina de grados; (i) el Experimento 5 (composición μ/λ, "
+  "exploratorio, no preregistrado) comparte la limitación de una sola llamada por caso; la "
+  "diferencia de magnitud entre TORN-1 y TORN-2 (0,86/0,84 vs. 0,64/0,62) no se puede "
+  "atribuir a una causa sin más repeticiones; y no se probó si la composición generaliza más "
+  "allá del dominio del semáforo o a estados con más de dos fuentes de evidencia.")
 
 # ------------------------------------------------------------------ 9
 P("9 Conclusión", "Section title")
@@ -509,7 +550,11 @@ P("El primer experimento de este trabajo pareció confirmar que los modelos de e
   "exploratorio, con el tipo Score, sugiere que la variable relevante no es "
   "escalar-vs-categórico sino qué pregunta fuerza cada tipo —un escalar sobre \"cuán "
   "determinada está la evidencia\" sí separa conflicto severo de ausencia total, aunque no "
-  "logró establecer una escala fina de grados intermedios.")
+  "logró establecer una escala fina de grados intermedios. Un quinto experimento cerró el "
+  "círculo abierto por la teoría de decisión anotada de la §4: componiendo dos llamadas "
+  "boolean independientes —a favor y en contra, sin forzar que sumen 1— se reconstruye el "
+  "par (μ, λ) de esa teoría sin que Jev lo calcule internamente, y los cuatro vértices "
+  "canónicos del retículo aparecen donde se esperaba.")
 P("La lección que sobrevive a los tres experimentos no es sobre un límite fijo de Jev como "
   "producto, sino sobre dos riesgos distintos y ambos reales para quien construya sobre "
   "modelos de evaluación tipada: primero, reducir una decisión epistémicamente compleja al "
@@ -527,7 +572,8 @@ P("Repositorio público: https://github.com/mleyvaz/jev-typed-evaluation-collaps
   "(run_experiment_choice.mjs, results_choice.json), del Experimento 3 "
   "(run_experiment_choice_binary.mjs, results_choice_binary.json), la llamada de seguimiento "
   "que completó el caso AGREE-REFUTE (run_missing_refute.mjs), el Experimento 4 "
-  "(run_experiment_graded_score.mjs, results_graded_score.json), el script de la Figura 1 "
+  "(run_experiment_graded_score.mjs, results_graded_score.json), el Experimento 5 "
+  "(run_experiment_dual_noul.mjs, results_dual_noul.json), el script de la Figura 1 "
   "(make_fig1_taxonomy.py), y la ronda de revisión adversarial que motivó las revisiones "
   "v0.1 → v0.2 → v0.3.")
 
@@ -712,6 +758,25 @@ const result = await evaluate({
 });
 """)
 
+P("Experimento 5 (composición μ/λ, dos preguntas boolean independientes):", bold=True)
+code_block("""
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT, // uno de los seis estados del Anexo A
+  questions: {
+    mu: {
+      type: 'boolean',
+      instructions: 'Is there credible evidence supporting the claim that the traffic light was red?',
+    },
+    lambda: {
+      type: 'boolean',
+      instructions: 'Is there credible evidence supporting the claim that the traffic light was NOT red (i.e., was green)?',
+    },
+  },
+});
+// mu y lambda no estan forzados a sumar 1: son preguntas independientes, no una eleccion.
+""")
+
 # ------------------------------------------------------------------ Anexo C
 P("Anexo C. Respuesta completa (answers) por caso", "Section title")
 P("Objeto answers devuelto por Jev para cada caso completado, sin editar (el objeto completo "
@@ -770,6 +835,16 @@ SILENCE-MODERATE:
   {"determinacy":{"score":3.66,"probabilities":{"0":0,"1":0,"2":0.02,"3":0.30,"4":0.68}}}
 SILENCE-SEVERE:
   {"determinacy":{"score":3.95,"probabilities":{"0":0,"1":0,"2":0.02,"3":0.01,"4":0.97}}}
+""")
+
+P("Experimento 5 — composición μ/λ:", bold=True)
+code_block("""
+TORN-1:         {"mu":{"probability":0.86},"lambda":{"probability":0.84}}
+TORN-2:         {"mu":{"probability":0.64},"lambda":{"probability":0.62}}
+SILENT-1:       {"mu":{"probability":0.04},"lambda":{"probability":0.04}}
+SILENT-2:       {"mu":{"probability":0.05},"lambda":{"probability":0.04}}
+AGREE-SUPPORT:  {"mu":{"probability":0.91},"lambda":{"probability":0.06}}
+AGREE-REFUTE:   {"mu":{"probability":0.06},"lambda":{"probability":0.92}}
 """)
 
 doc.save(OUT)
