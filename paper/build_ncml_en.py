@@ -323,8 +323,32 @@ P("Experiment 5 (μ/λ composition, exploratory): motivated by an idea discussed
   "(i.e., was green)?\", without forcing their probabilities to sum to 1 — independent "
   "questions, not a choice among options. Exploratory, not preregistered, motivated by the "
   "prior results.")
-P("None of the five experiments averages repetitions (a single call per case; limitation "
-  "in §8). The calls were made on September 19 and 20, 2026 against the production model, "
+P("Experiment 6 (third indeterminacy coordinate, validated with an expanded dataset): "
+  "motivated by whether a third indeterminacy coordinate (I), as in neutrosophic logic "
+  "(T, I, F), captures something the (μ, λ) pair of Experiment 5 does not. A seventh state, "
+  "AMBIGUOUS, was designed (evidence that is intrinsically vague from a single source — "
+  "neither contradictory like TORN nor absent like SILENT), and, alongside μ and λ, I was "
+  "asked: \"Is it indeterminate whether [the claim] — that is, does the available evidence "
+  "fail to clearly resolve this either way, regardless of the reason why?\" A first "
+  "single-call-per-category pilot (n=1, traffic-light domain) suggested I did not "
+  "distinguish TORN, SILENT, or AMBIGUOUS from each other — all three fell in the same high "
+  "band — but with n=1 that conclusion could not be trusted. An expanded dataset of 20 "
+  "heterogeneous domains was then built (traffic light, defective product, workplace "
+  "attendance, medical biopsy, bank authorization, weather, contract, inventory, security, "
+  "academic submission, vehicle brakes, food-safety inspection, building foundation, "
+  "insurance, election, software, customs, veterinary, aviation, real estate), each "
+  "instantiating the same 5 categories (TORN, SILENT, AGREE-SUPPORT, AGREE-REFUTE, "
+  "AMBIGUOUS) with an identical structural template across domains, for a total of 100 "
+  "states (n=20 per category). The full domain list is in Appendix A. A first attempt with "
+  "μ/λ questions phrased meta-referentially (\"does it support the direction labeled true "
+  "in the state?\") detectably degraded the model's calibration — an AGREE-REFUTE control "
+  "that should have given low μ/high λ instead gave values nearly identical to "
+  "AGREE-SUPPORT — so μ/λ were reformulated as concrete, domain-specific claims, as in "
+  "Experiment 5, and the full dataset was rerun before reporting results.")
+P("None of the six experiments averages repetitions within a single state (a single call "
+  "per case; limitation in §8) — Experiment 6 gains statistical power by repeating the "
+  "case structure across 20 domains, not by repeating the same case. The calls were made on "
+  "September 19 and 20, 2026 against the production model, "
   "with no access to its weights or training set.")
 
 # ------------------------------------------------------------------ 6
@@ -420,6 +444,25 @@ P("Composing two independent boolean calls — one for evidence in favor, one ag
   "(0.86/0.84) and TORN-2 (0.64/0.62); with n=1 per case it cannot be established whether "
   "that is a real signal or sample noise.")
 
+table(["Category", "μ", "λ", "I"],
+      [["TORN", "0.80 ± 0.04", "0.84 ± 0.04", "0.85 ± 0.02"],
+       ["SILENT", "0.04 ± 0.01", "0.10 ± 0.05", "0.96 ± 0.01"],
+       ["AGREE-SUPPORT", "0.91 ± 0.02", "0.05 ± 0.01", "0.13 ± 0.05"],
+       ["AGREE-REFUTE", "0.04 ± 0.01", "0.91 ± 0.02", "0.12 ± 0.05"],
+       ["AMBIGUOUS", "0.13 ± 0.04", "0.15 ± 0.06", "0.95 ± 0.02"]],
+      "Table 7: Experiment 6 — 20-domain dataset (n=20 per category, mean ± SD).")
+P("The μ/λ pattern from Experiment 5 replicates with high consistency across the "
+  "20 domains: TORN clearly separates from {SILENT, AMBIGUOUS} (both low), and the controls "
+  "land where expected. On I, three two-tailed Welch's t-tests show the three "
+  "\"undetermined\" categories are statistically distinguishable from one another, though "
+  "with very different magnitudes: TORN vs. SILENT (mean difference 0.109; t=-25.80; "
+  "df=26.7), TORN vs. AMBIGUOUS (difference 0.096; t=-17.67; df=38.0), and SILENT vs. "
+  "AMBIGUOUS (difference 0.014; t=3.22; df=26.8; p≈0.003). The first two are large, "
+  "highly robust differences; the third is real but an order of magnitude smaller, and its "
+  "magnitude (0.014) is comparable to the within-category standard deviation "
+  "(0.008–0.017) — significant at the population level, but insufficient to "
+  "confidently classify a single new case.")
+
 # ------------------------------------------------------------------ 7
 P("7 Discussion", "Section title")
 P("The pattern in Experiment 1 is consistent with the prediction in §4: under the Noul type, "
@@ -495,6 +538,23 @@ P("Experiment 5 closes the loop opened in §4 in a way that was not anticipated:
   "magnitude difference between TORN-1 and TORN-2 cannot be attributed to a cause with this "
   "data; and whether this composition generalizes to domains other than the traffic light, "
   "or to evidence with more than two sources, remains an open question.")
+P("Experiment 6 corrects, with data, a hasty reading by the analysis itself: looking at the "
+  "ranges of an n=5-per-domain pilot, it was concluded that I \"does not distinguish\" "
+  "SILENT from AMBIGUOUS. The Welch's t-test on the n=20 dataset shows it does distinguish "
+  "them, though with a magnitude an order smaller than the one separating TORN from both. "
+  "The lesson is twofold: first, I does carry information (μ, λ) alone do not "
+  "expose — contrary to the pilot's first impression — which answers, with qualification, "
+  "the motivating question of whether a third neutrosophic coordinate captures something "
+  "genuine; second, that information has scientific value (it confirms the coordinate is "
+  "not redundant) but limited operational value: the SILENT-AMBIGUOUS difference (0.014) is "
+  "of the same order as the within-category standard deviation (0.008–0.017), so it "
+  "does not allow confidently classifying a single new case from I alone. For anyone "
+  "wanting to use I as a third coordinate, the honest recommendation is: it serves to "
+  "corroborate at the aggregate level that the distinction exists, and is a useful "
+  "component alongside (μ, λ) for separating conflict from non-conflict; it does "
+  "not serve, with this design, as a case-by-case classifier of why something is "
+  "undetermined within the non-conflict region. Alternative phrasings of the I question, "
+  "which might widen that separation, were not tested.")
 
 # ------------------------------------------------------------------ 8
 P("8 Limitations", "Section title")
@@ -523,7 +583,15 @@ P("(a) [RESOLVED 2026-09-19] The AGREE-REFUTE control initially failed due to th
   "single-call-per-case limitation; the magnitude difference between TORN-1 and TORN-2 "
   "(0.86/0.84 vs. 0.64/0.62) cannot be attributed to a cause without more repetitions; and "
   "whether the composition generalizes beyond the traffic-light domain, or to states with "
-  "more than two evidence sources, was not tested.")
+  "more than two evidence sources, was not tested; (j) Experiment 6, although validated "
+  "with n=20 per category across 20 heterogeneous domains, shares the same structural "
+  "template across domains (two reporting sources / total absence / one vague source) — it "
+  "does not cover other forms of conflict or indeterminacy (numerical evidence, time "
+  "series, more than two sources, partial rather than total disagreement); the I question "
+  "was phrased only one way, without testing alternative phrasings that might widen the "
+  "SILENT/AMBIGUOUS separation; and the author's own n=1 pilot led to a conclusion the "
+  "expanded data corrected — a concrete reminder of why this work repeatedly declares the "
+  "n=1 limitation in Experiments 1-5.")
 
 # ------------------------------------------------------------------ 9
 P("9 Conclusion", "Section title")
@@ -543,7 +611,16 @@ P("The first experiment in this work seemed to confirm that typed evaluation mod
   "degrees. A fifth experiment closed the loop opened by annotated decision theory in §4: "
   "composing two independent boolean calls — for and against, without forcing them to sum "
   "to 1 — reconstructs that theory's (μ, λ) pair without Jev computing it "
-  "internally, and the lattice's four canonical vertices appeared where expected.")
+  "internally, and the lattice's four canonical vertices appeared where expected. A sixth "
+  "experiment, validated on a dataset of 20 heterogeneous domains (n=20 per category), "
+  "tested whether a third neutrosophic indeterminacy coordinate (I) captures something "
+  "(μ, λ) do not: the answer is affirmative but qualified — I statistically "
+  "distinguishes conflict from non-conflict (large effect) and, with smaller but still "
+  "significant magnitude (p≈0.003), total absence of evidence from intrinsically vague "
+  "evidence, though the latter distinction is too small relative to single-case noise to be "
+  "useful case by case. The experiment's own process — a wrong conclusion at n=1, "
+  "corrected at n=20 — illustrates in practice the sample-size limitation this work "
+  "repeatedly declares.")
 P("The lesson that survives all three experiments is not about a fixed limit of Jev as a "
   "product, but about two distinct and equally real risks for anyone building on typed "
   "evaluation models: first, reducing an epistemically complex decision to the simplest "
@@ -562,7 +639,10 @@ P("Public repository: https://github.com/mleyvaz/jev-typed-evaluation-collapse �
   "(run_experiment_choice_binary.mjs, results_choice_binary.json), the follow-up call that "
   "completed the AGREE-REFUTE case (run_missing_refute.mjs), Experiment 4 "
   "(run_experiment_graded_score.mjs, results_graded_score.json), Experiment 5 "
-  "(run_experiment_dual_noul.mjs, results_dual_noul.json), the Figure 1 script "
+  "(run_experiment_dual_noul.mjs, results_dual_noul.json), Experiment 6 "
+  "(run_experiment_triple_mli.mjs + results_triple_mli.json, n=1 pilot; "
+  "run_experiment_multidomain_mli.mjs + results_multidomain20_mli.json, 20-domain dataset), "
+  "the Figure 1 script "
   "(make_fig1_taxonomy.py), and the adversarial review round that motivated the v0.1 → v0.2 "
   "→ v0.3 revisions.")
 
@@ -669,6 +749,60 @@ for titulo, texto in estados_exp4:
     P(titulo, bold=True)
     P(texto, italic=True)
 
+P("Experiment 6 pilot's AMBIGUOUS state (intrinsically vague evidence, traffic-light "
+  "domain):", bold=True)
+P("A single grainy photograph shows the traffic light mid-transition, rendered as an "
+  "indistinct orange-red blur due to motion blur and low light. The photo technician who "
+  "examined the image says its quality makes it impossible to tell whether the light had "
+  "already reached red or was still yellow. There is only this one photograph; no other "
+  "witness, sensor, or recording of the moment exists.", italic=True)
+
+P("The 20 domains of Experiment 6's expanded dataset.", bold=True)
+P("Each domain instantiates the same 5-category template (TORN, SILENT, AGREE-SUPPORT, "
+  "AGREE-REFUTE, AMBIGUOUS) used above for the traffic light, substituting the subject, the "
+  "disputed claim, the sources, and the vague-evidence description. One full worked example "
+  "(WEATHER) is shown, and for the remaining 19, the subject and disputed claim; the "
+  "complete parameters are in run_experiment_multidomain_mli.mjs in the repository, "
+  "generated programmatically by the mkDomain() function to avoid the wording confounds of "
+  "Experiment 4.")
+P("Full example — WEATHER:", bold=True)
+P("TORN: \"Witness A, standing under the awning near the scene, reported that it was "
+  "raining at the time of the incident. Witness B, standing at the same location with an "
+  "equally credible basis, reported that it was NOT raining at the time of the incident. "
+  "Both are considered reliable; there is no indication either one is mistaken.\"", italic=True)
+P("SILENT: \"No weather station reading was available regarding whether it was raining at "
+  "the time of the incident. No dashcam or security footage from the area exists either. "
+  "There is no record of any kind describing whether it was raining at the time of the "
+  "incident.\"", italic=True)
+P("AGREE-SUPPORT / AGREE-REFUTE: both sources agree it was raining / was not raining, "
+  "worded in parallel to the TORN pattern.")
+P("AMBIGUOUS: \"A single smartphone photo from a passerby shows wet-looking pavement, but "
+  "the meteorologist who reviewed it says reflections from nearby sprinklers make it "
+  "impossible to tell whether the wetness was from rain or irrigation. No other weather "
+  "record exists.\"", italic=True)
+P("The other 19 domains (subject → disputed claim):", bold=True)
+table(["Domain", "Disputed claim"],
+      [["TRAFFIC", "the traffic light was red"],
+       ["PRODUCT", "the phone's screen was cracked upon arrival"],
+       ["ATTENDANCE", "the employee was present at the 9am meeting"],
+       ["MEDICAL", "the biopsy sample was malignant"],
+       ["FINANCE", "the account holder authorized the wire transfer"],
+       ["CONTRACT", "the contract clause was signed by both parties"],
+       ["INVENTORY", "the warehouse had the item in stock on that date"],
+       ["SECURITY", "the door was locked at closing time"],
+       ["ACADEMIC", "the student submitted the assignment before the deadline"],
+       ["VEHICLE", "the car's brakes were functioning properly before the accident"],
+       ["FOODSAFETY", "the restaurant kitchen passed the health inspection that day"],
+       ["CONSTRUCTION", "the building's foundation met code specifications"],
+       ["INSURANCE", "the claimant's injury occurred on company property"],
+       ["ELECTION", "the ballot was received before the polling deadline"],
+       ["SOFTWARE", "the deployed code included the security patch"],
+       ["CUSTOMS", "the shipment declared its full contents accurately"],
+       ["VETERINARY", "the animal showed symptoms of the disease before treatment"],
+       ["AVIATION", "the aircraft's pre-flight check was completed"],
+       ["REALESTATE", "the property disclosure included the known defect"]],
+      "Table 8: The other 19 domains of the Experiment 6 dataset.")
+
 # ------------------------------------------------------------------ Appendix B
 P("Appendix B. Call Code, per Experiment", "Section title")
 
@@ -766,6 +900,30 @@ const result = await evaluate({
 // mu and lambda are not forced to sum to 1: independent questions, not a choice.
 """)
 
+P("Experiment 6 (third coordinate I, 20-domain dataset):", bold=True)
+code_block("""
+function mkDomain(id, subject, claimTrue, claimFalse, reliableA, reliableB,
+                   primaryEvidence, secondaryEvidence, ambiguousEvidence) {
+  const mu = { type: 'boolean',
+    instructions: `Is there credible evidence supporting the claim that ${claimTrue}?` };
+  const lambda = { type: 'boolean',
+    instructions: `Is there credible evidence supporting the claim that ${claimFalse}?` };
+  const indeterminacy = { type: 'boolean',
+    instructions: `Is it indeterminate whether ${claimTrue} — that is, does the available `
+      + `evidence fail to clearly resolve this either way, regardless of the reason why?` };
+  return [ /* TORN, SILENT, AGREE-SUPPORT, AGREE-REFUTE, AMBIGUOUS, each with a state built
+              from the template and {mu, lambda, indeterminacy} */ ];
+}
+// 20 calls to mkDomain(...) generate the 100 states; see run_experiment_multidomain_mli.mjs
+// in the repository for the 20 full parameter sets.
+
+const result = await evaluate({
+  model: 'typesafe-ai/jev',
+  state: STATE_TEXT,
+  questions: { mu: item.mu, lambda: item.lambda, indeterminacy: item.indeterminacy },
+});
+""")
+
 # ------------------------------------------------------------------ Appendix C
 P("Appendix C. Full Response (answers) per Case", "Section title")
 P("The answers object returned by Jev for each completed case, unedited (the full response "
@@ -834,6 +992,28 @@ SILENT-1:       {"mu":{"probability":0.04},"lambda":{"probability":0.04}}
 SILENT-2:       {"mu":{"probability":0.05},"lambda":{"probability":0.04}}
 AGREE-SUPPORT:  {"mu":{"probability":0.91},"lambda":{"probability":0.06}}
 AGREE-REFUTE:   {"mu":{"probability":0.06},"lambda":{"probability":0.92}}
+""")
+
+P("Experiment 6 — pilot (n=1, traffic-light domain, with I added):", bold=True)
+code_block("""
+TORN-1:         mu=0.87  lambda=0.84  I=0.89
+TORN-2:         mu=0.65  lambda=0.60  I=0.88
+SILENT-1:       mu=0.04  lambda=0.04  I=0.97
+SILENT-2:       mu=0.05  lambda=0.04  I=0.95
+AGREE-SUPPORT:  mu=0.92  lambda=0.06  I=0.14
+AGREE-REFUTE:   mu=0.06  lambda=0.92  I=0.12
+AMBIGUOUS:      mu=0.12  lambda=0.06  I=0.97
+""")
+
+P("Experiment 6 — 20-domain dataset (n=20 per category). The full 100 rows are in "
+  "results_multidomain20_mli.json in the repository; the per-category summary is in "
+  "Table 7. Sample, WEATHER domain:", bold=True)
+code_block("""
+WEATHER-TORN:           mu=0.81  lambda=0.85  I=0.84
+WEATHER-SILENT:         mu=0.03  lambda=0.05  I=0.97
+WEATHER-AGREE-SUPPORT:  mu=0.92  lambda=0.04  I=0.09
+WEATHER-AGREE-REFUTE:   mu=0.04  lambda=0.88  I=0.12
+WEATHER-AMBIGUOUS:      mu=0.13  lambda=0.14  I=0.95
 """)
 
 doc.save(OUT)
